@@ -17,7 +17,7 @@ A responsive browser application, ready for GitHub Pages. No build tools or depe
 ## Host on GitHub Pages
 
 1. Create a GitHub repository for the application code.
-2. Upload index.html, app.js, cloud.js, excel.js, style.css and README.md to the root of the main branch.
+2. Upload all application files, including manifest.webmanifest, pwa.js, sw.js and the icons folder to the root of the main branch.
 3. Under Settings → Pages, choose “Deploy from a branch”, main, / (root).
 4. Open the Pages URL in Chrome on Android or Chrome/Edge on Windows.
 
@@ -62,3 +62,15 @@ The app is for a trusted school operator on a protected device. Cached records a
 ## Local preview
 
 Run `python3 -m http.server 8000` in this directory, then open http://localhost:8000. Folder access needs HTTPS or localhost. For Microsoft sign-in in local development, register http://localhost:8000/ as another SPA redirect URI. Opening a file:// URL does not support cloud sign-in.
+
+## Install on Android or Windows
+
+After GitHub Pages has finished deploying, open https://sreenivassarma82.github.io/preschoolapp/ in Chrome (Android or Windows) or Edge (Windows). Use the live HTTPS website, not the github.com code page or an extracted local file.
+
+- Android Chrome: refresh the website while online, then tap the app's “Install app” button when it appears, or Chrome's ⋮ menu → Add to Home screen → Install. Menu labels vary by Chrome version. Chrome may require a little interaction with the page before offering installation.
+- Windows Chrome: use “Install app” in the page or the install icon in the address bar. Edge also offers ⋯ → Apps → Install this site as an app.
+- Open Little Ledger from your home screen or Start menu. The installed app uses the same records/storage settings as its browser profile. Microsoft may require sign-in again, especially when switching between browser and installed app.
+
+The manifest uses relative URLs so GitHub's repository subdirectory works correctly. App icons include 192px, 512px and maskable variants. The service worker caches only application files. It does not cache records, tokens, Microsoft requests or OAuth callback URLs. Offline mode opens the interface and allows browser-only records to be viewed/edited; cloud saves still require internet and loaded OneDrive records. Keep backups.
+
+If Chrome still offers only a shortcut, confirm that deployment has finished, close and reopen the live website, and refresh online. Do not clear browser storage merely to refresh the app, because that can remove locally stored student records and settings. Native APK/EXE packages are not required for this installable web app.
