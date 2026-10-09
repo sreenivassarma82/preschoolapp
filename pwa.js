@@ -24,7 +24,7 @@
       await promptEvent.prompt();
       await promptEvent.userChoice;
     } catch (error) {
-      console.warn('Use the browser menu to install Little Ledger.', error);
+      console.warn('Use the browser menu to install Little wings preschool ledger.', error);
     } finally {
       promptEvent = null;
       install.hidden = true;
