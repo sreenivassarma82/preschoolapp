@@ -6,3 +6,5 @@
 .brand span{font-size:19px;line-height:1.25}
 
 #cloudFolderBreadcrumbs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}#cloudFolderBreadcrumbs button{background:#eef2ff;color:#235be2;text-align:left;padding:8px 10px}#cloudFolderNotice:not(:empty){background:#fff1e4;padding:12px;border-radius:7px;margin:12px 0;overflow-wrap:anywhere}#cloudFolderList{display:grid;gap:8px;max-height:35vh;overflow:auto;margin:18px 0}#cloudFolderList button{text-align:left;padding:14px;white-space:normal;overflow-wrap:anywhere}#cloudNewFolderForm label{flex:1;min-width:180px;margin:0}
+
+#sharedFolderForm{margin:15px 0;padding:14px;background:#f2f5f9;border-radius:8px}#sharedFolderForm label{flex:1;min-width:180px;margin:0}#operatorForm{margin:15px 0}#operatorForm label{flex:1;margin:0}

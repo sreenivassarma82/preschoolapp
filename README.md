@@ -57,7 +57,7 @@ Excel export is for reporting. Photos are not embedded in the workbook; a column
 
 JSON restore replaces current records after confirmation, including the connected cloud/local folder. Download a backup before restoring. Photos are limited to 1 MB each; the browser cache has a quota, so keep regular JSON backups. Cloud/folder records remain authoritative when connected.
 
-The app is for a trusted school operator on a protected device. Cached records are accessible to anyone with access to that browser profile. Use account/device locks and a private OneDrive folder. No role-based access, immutable accounting audit, or student portal is included. Payment “Void” removes a payment after confirmation.
+The app is for a trusted school operator on a protected device. Cached records are accessible to anyone with access to that browser profile. Use account/device locks and a private OneDrive folder. No app-level role restrictions or immutable server audit are included. Every user with Can edit access to the shared records has the same app deletion and restoration controls. Payment deletion removes the payment from active totals after confirmation and keeps a recoverable copy in Activity history.
 
 ## Local preview
 
@@ -95,4 +95,31 @@ In Year & storage settings → OneDrive cloud:
 4. Once inside your desired folder, tap “Use this folder”. The OneDrive root cannot be selected: choose a dedicated subfolder for preschool records.
 5. Confirm loading existing records or creating a records file from the current browser records. Existing records are never overwritten merely by selecting a folder.
 
-The selected folder's path and stable OneDrive item ID are remembered in this browser. You do not need to select it every visit; its stable ID also survives a rename or move within the same account. A new device requires the same Microsoft setup and an initial folder selection. The browser lists folders owned by the signed-in OneDrive account; shared-library/SharePoint folders and shortcuts are not included. To change the folder, use “Browse OneDrive folders” again. The typed path option remains available.
+The selected folder's path and stable OneDrive item ID are remembered in this browser. You do not need to select it every visit; its stable ID also survives a rename or move within the same account. A new device requires the same Microsoft setup and an initial folder selection. The ordinary folder browser lists the signed-in account’s folders. To use another user’s shared folder, paste its link into “Shared OneDrive folder link”. Access depends on Microsoft sharing permissions and organization policy; GitHub membership does not grant it. To change the folder, use “Browse OneDrive folders” again. The typed path option remains available.
+
+## Collaborator sign-in on Android
+
+The collaborator should open the live HTTPS site in Chrome (not a GitHub ZIP, embedded messaging browser or private/incognito window). The app now explicitly opens Microsoft's account chooser, supports PKCE callbacks arriving in another same-origin browser tab, and records connection failures locally without logging tokens.
+
+1. On the owner's device: Settings → Download connection settings. Send the resulting little-wings-connection.json file to the collaborator. It contains only the public Microsoft client ID, account type and path; it does not contain tokens, shared links or student records.
+2. Share the school’s OneDrive folder with the collaborator’s Microsoft email using **Can edit** access. Send the folder sharing link separately and have the collaborator accept the invitation. Prefer a link restricted to their account, not a public link exposing student records.
+3. On Android: Settings → Import connection settings, then Sign in with Microsoft and choose the collaborator’s own Microsoft account. Do not share passwords.
+4. In the OneDrive folder browser, paste the school’s folder link into **Shared OneDrive folder link** and tap **Open shared folder**. Tap **Use this folder**, then confirm loading the existing records.
+5. For different users’ personal and school accounts, the Microsoft app registration must support “Accounts in any organizational directory and personal Microsoft accounts”; select common in the ledger. An organization's administrator may need to approve delegated Files.ReadWrite consent or guest access. A single-tenant app cannot be made multi-tenant merely by changing the app's tenant selector.
+
+A GitHub collaborator invitation is separate from a OneDrive invitation. If sign-in still fails, capture the exact AADSTS code and error text; actual account/tenant policy cannot be repaired by the static web app. Live collaborator sign-in has not been verified with a real account.
+
+## Deletion and Activity history
+
+- Students tab → Delete: removes that year's enrolment and its payments from active records and fee totals. Other academic-year enrolments remain intact.
+- Fees & payments → Delete/Void: removes an individual payment from totals. Its copy remains recoverable.
+- Settings → Delete this academic year: allowed only when empty and another year exists.
+- Activity history → Deleted records → Restore: restores deleted students with their payments, individual payments, or empty-year fee settings. Restore a missing year/student first when prompted. Conflicting admission numbers and duplicate active records are not overwritten.
+
+Activity history records primary app actions including record creation/editing/deletion/restoration, fee/year changes, exports, navigation, searches, connection setup, sign-in outcomes and failed saves. Successful record-change entries are written atomically in the same preschool-records.json save as the change. The tab shows time, operator, action, item, year, details and outcome; it supports search, year filters and Excel export. The normal ledger workbook also includes Activity history and Deleted records sheets.
+
+Set **Your name for activity history** in Settings. When a Microsoft session provides an account label, it is included alongside that name. A manually entered name and browser clock are not trusted identity or timestamp evidence.
+
+GitHub Pages is static and has no server-side database. Activity entries are persisted with the ledger in OneDrive (or the local folder/browser when that mode is selected). Non-record actions and failed requests are queued locally and synced when the connected records become writable; use **Sync pending activity** to retry. Failed data writes never produce a successful record-change entry. Historical activity before this feature was added is not reconstructed. JSON restore preserves existing stored history and merges imported entries.
+
+This is a shared operational history, not a tamper-proof backend audit: a person with access to the JSON file can modify its contents, older cached app versions may not log changes, and disconnected device events cannot reach OneDrive until reconnecting. Pending activity for a different ledger remains on that device rather than being sent to an unrelated ledger. Setup/sign-in events follow the ledger when a OneDrive connection is established. A server-enforced append-only audit and roles would need a separately hosted authenticated backend.
