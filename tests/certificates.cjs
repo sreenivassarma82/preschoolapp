@@ -7,7 +7,7 @@ function setup(){const els=new Map();const el=s=>{if(!els.has(s))els.set(s,{text
 await run("commit((()=>{const n=clone();n.students.push({id:uid(),branchId:Admin.MAIN,year,class:'Jr. Kg',first:'Synthetic',gender:'Male',middle:'Sample',surname:'Student',father:'Sample Father',mother:'Sample Mother',dob:'2021-06-04',discount:0,admission:'T1'});return n})())");
 run("navigateTo('certificates')");assert.match(el('#view').innerHTML,/certificateForm/);assert.equal(run("groupForTab('certificates')"),'students');
 const form={student:run('data.students[0].id'),date:'2026-06-25',place:'Badlapur',principal:'Deepti Sarma',status:'is'};
-await submit('#certificateForm',form);assert.match(el('#view').innerHTML,/BONAFIDE CERTIFICATE/);assert.match(el('#view').innerHTML,/Mr\. Synthetic/);assert.match(el('#view').innerHTML,/04 June 2021/);assert.match(el('#view').innerHTML,/Sample Father/);assert.match(el('#view').innerHTML,/Sample Mother/);assert.match(el('#view').innerHTML,/2026-27/);
+await submit('#certificateForm',form);assert.match(el('#view').innerHTML,/BONAFIDE CERTIFICATE/);assert.match(el('#view').innerHTML,/Mr\. Synthetic/);assert.match(el('#view').innerHTML,/04 June 2021/);assert.match(el('#view').innerHTML,/His date of birth/);assert(!el('#view').innerHTML.includes('His / Her'));assert.match(el('#view').innerHTML,/Sample Father/);assert.match(el('#view').innerHTML,/Sample Mother/);assert.match(el('#view').innerHTML,/2026-27/);
 for(const a of run('SchoolDocuments.addresses'))assert(el('#view').innerHTML.includes(a.replace(/&/g,'&amp;')));
 run("setTopClass('Nursery');render()");assert.match(el('#view').innerHTML,/No students/);run("setTopClass('');render()");
 assert.throws(()=>run("SchoolDocuments.details({...data.students[0],dob:''},certificateOptions)"),/date of birth/);
@@ -17,6 +17,7 @@ x.Image=class{constructor(){this.naturalWidth=1280;this.naturalHeight=694}set sr
 const pdf=await run('SchoolDocuments.pdf(SchoolDocuments.details(data.students[0],certificateOptions))');assert.equal(pdf.type,'application/pdf');assert((await pdf.text()).startsWith('%PDF-1.4'));assert(draws.some(d=>d.t==='BONAFIDE CERTIFICATE'));for(const a of run('SchoolDocuments.addresses'))assert(draws.some(d=>d.t===a&&d.y>1600));assert(draws.every(d=>d.y<1754));
 assert.equal(run("SchoolDocuments.studentName({...data.students[0],gender:'Female'},true)"),'Miss. Synthetic Sample Student');
 assert.throws(()=>run("SchoolDocuments.details({...data.students[0],gender:''},certificateOptions)"),/gender/);
+draws.length=0;await run("SchoolDocuments.pdf(SchoolDocuments.details({...data.students[0],gender:'Female'},certificateOptions))");assert(draws.some(d=>d.t.startsWith('Her date of birth')));assert(!draws.some(d=>d.t.includes('His / Her')));
 const legacy=run('clone()');delete legacy.students[0].gender;x.legacyGender=legacy;run('validate(globalThis.legacyGender)');assert.equal(legacy.students.length,1);
 console.log('PASS: certificate student/class filtering, admission-derived values, exact address footer, date and missing-data validation, PDF content and page bounds');
 })().catch(e=>{console.error(e);process.exitCode=1});
