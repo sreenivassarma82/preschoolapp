@@ -57,20 +57,21 @@ const field=(key,label,type='text',value='',extra='')=>`<label>${label}<input na
 function openStudent(id){if(!branchWritable())return;activity(id?'Student viewed':'Admission form opened',id?name(data.students.find(s=>s.id===id)):'New admission');editing=id||null;clearAdmissionError();const s=data.students.find(s=>s.id===id)||{class:classes[0],date:today(),discount:0};$('#editorTitle').textContent=id?'View / edit admission':'New student admission';$('#fields').innerHTML=`<label>Select branch *<select name="branchId" required ${id?'disabled':''}>${data.branches.filter(b=>!b.archived||b.id===s.branchId).map(b=>`<option value="${esc(b.id)}" ${b.id===(s.branchId||branchId)?'selected':''}>${esc(b.name)} · ${esc(b.code)}</option>`).join('')}</select></label><div class="section-label">Student · ${esc(year)}</div><div class="grid three">${field('surname','Surname','text',s.surname)}${field('first','First name *','text',s.first,'required maxlength="100"')}${field('middle','Middle name','text',s.middle)}</div><div class="grid">${field('admission','Admission number (automatic)','text',id?(s.admission||''):Admissions.preview(data,branchId,year),'readonly')}<p class="setting-note">New numbers are assigned when saved using branch code, academic year and a running sequence.</p>${field('date','Admission date *','date',s.date,'required')}${field('dob','Date of birth','date',s.dob)}${field('blood','Blood group','text',s.blood)}<label>Admission applied for<select name="class">${classes.map(c=>`<option ${s.class===c?'selected':''}>${c}</option>`).join('')}</select></label>${field('discount','Annual discount amount','number',s.discount,'min="0" step="0.01" required')}</div><div class="section-label">Parents & contact details</div><div class="grid">${field('father',"Father’s full name",'text',s.father)}${field('mother',"Mother’s full name",'text',s.mother)}${field('mobile','Mobile number *','tel',s.mobile,'required maxlength="30"')}${field('otherContact','Other contact number','tel',s.otherContact)}<label class="full">Address<textarea name="address">${esc(s.address)}</textarea></label></div><div class="section-label">Photo & acknowledgment</div><div class="grid"><label>Student photo (up to 1 MB)<input name="photoFile" type="file" accept="image/png,image/jpeg,image/webp">${s.photo?'<span>Photo already saved; select a file to replace it.</span>':''}</label><label>Remove saved photo<input type="checkbox" name="removePhoto"></label>${field('parentSignature','Parent signature / signed by','text',s.parentSignature)}${field('staffSignature','Staff signature / acknowledged by','text',s.staffSignature)}<label class="full">Notes<textarea name="notes">${esc(s.notes)}</textarea></label></div><p class="setting-note">Signature fields record the signatory’s name; they are not digital signatures.</p>`;$('#studentForm [name=branchId]').addEventListener('change',updateAdmissionPreview);$('#editor').showModal()}
 let admissionSaving=false;
 function admissionError(message,fieldName=''){
- const box=$('#admissionNotice');box.textContent=message||'The admission could not be saved. Please try again.';box.hidden=false;box.scrollIntoView?.({block:'nearest'});
+ const text=message||'The admission could not be saved. Please try again.';const feedback=$('#admissionFeedback');if(feedback){feedback.textContent=text;feedback.hidden=false;}const box=$('#admissionNotice');if(box){box.textContent=text;box.hidden=false;box.scrollIntoView?.({block:'nearest'});}else window.ledgerShowFailure?.(text);
  if(fieldName){const input=$('#studentForm [name="'+fieldName+'"]');input?.setAttribute?.('aria-invalid','true');input?.focus?.();}
  return false;
 }
-function clearAdmissionError(){const box=$('#admissionNotice');box.textContent='';box.hidden=true;}
+function clearAdmissionError(){for(const id of ['admissionNotice','admissionFeedback']){const box=$('#'+id);if(box){box.textContent='';box.hidden=true;}}}
+function admissionProgress(message){const feedback=$('#admissionFeedback');if(feedback){feedback.textContent=message;feedback.hidden=false;}}
 function admissionBusy(value){admissionSaving=value;const button=$('#saveAdmissionButton');if(button){button.disabled=value;button.textContent=value?'Saving…':'Save admission';}for(const id of ['closeEditor','cancelEditor']){const el=$('#'+id);if(el)el.disabled=value;}}
 $('#studentForm').addEventListener('invalid',e=>{const label=e.target.closest?.('label')?.firstChild?.textContent?.trim()||e.target.name||'Required field';admissionError(label.replace(/\s*\*$/,'')+': '+(e.target.validationMessage||'Please enter a valid value.'),e.target.name);},true);
 $('#studentForm').addEventListener('input',e=>e.target.removeAttribute?.('aria-invalid'));
 $('#editor').addEventListener('cancel',e=>{if(admissionSaving)e.preventDefault()});
-$('#studentForm').addEventListener('submit',async e=>{
- e.preventDefault();if(admissionSaving)return;clearAdmissionError();
- if(e.target.checkValidity&&!e.target.checkValidity()){e.target.reportValidity?.();return;}
- admissionBusy(true);
+async function saveStudentAdmission(e){
+ e.preventDefault();if(admissionSaving)return;clearAdmissionError();admissionProgress('Checking admission…');admissionBusy(true);
  try{
+  const invalid=Array.from(e.target.elements||[]).find(input=>typeof input.checkValidity==='function'&&!input.checkValidity());
+  if(invalid){const label=invalid.closest?.('label')?.firstChild?.textContent?.trim()||invalid.name||'Required field';return admissionError(label.replace(/\s*\*$/,'')+': '+(invalid.validationMessage||'Please enter a valid value.'),invalid.name);}
   const f=new FormData(e.target),old=data.students.find(s=>s.id===editing);
   if(editing&&!old)return admissionError('This student record no longer exists. Close the form and reload the latest ledger.');
   const selectedBranch=old?.branchId||String(f.get('branchId')||'');
@@ -94,17 +95,20 @@ $('#studentForm').addEventListener('submit',async e=>{
   if(f.get('removePhoto'))s.photo='';const file=f.get('photoFile');
   if(file?.size){
    if(file.size>1048576||!['image/png','image/jpeg','image/webp'].includes(file.type))return admissionError('Choose a PNG, JPEG or WebP photo no larger than 1 MB, or clear the photo selection to save without it.','photoFile');
-   s.photo=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('The photo could not be read. Choose it again or save without a photo.'));reader.onabort=()=>reject(Error('Photo reading was cancelled. Choose it again or save without a photo.'));reader.readAsDataURL(file)});
+   admissionProgress('Reading photo…');s.photo=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('The photo could not be read. Choose it again or save without a photo.'));reader.onabort=()=>reject(Error('Photo reading was cancelled. Choose it again or save without a photo.'));reader.readAsDataURL(file)});
   }
   const next=clone();if(!old)s.admission=Admissions.next(next,s.branchId,s.year,true);
   const i=next.students.findIndex(x=>x.id===s.id);if(i<0)next.students.push(s);else next.students[i]=s;
+  admissionProgress(OneDrive.enabled()?'Saving admission to OneDrive…':folder?'Saving admission to your folder…':'Saving admission in this browser…');
   if(await commit(next,{onError:error=>admissionError(error.message)})){
    branchId=s.branchId;try{localStorage.setItem('ledger-branch',branchId)}catch{}
    tab='students';render();$('#editor').close();notice('Admission saved: '+name(s)+' · '+s.admission+' · '+chosenBranch.name);
   }
  }catch(error){admissionError(error.message||'The admission could not be saved. Please try again.');}
  finally{admissionBusy(false);}
-});
+}
+$('#studentForm').addEventListener('submit',saveStudentAdmission);
+window.submitAdmission=()=>saveStudentAdmission({preventDefault(){},target:$('#studentForm')});
 function openPayment(id){if(!branchWritable())return;activity('Payment form opened',id?name(data.students.find(s=>s.id===id)):'Choose student');if(!rows().length)return notice('Add a student before recording a payment.');const f=$('#paymentForm');f.reset();f.elements.student.innerHTML=rows().map(s=>`<option value="${s.id}" ${id===s.id?'selected':''}>${esc(name(s))} · ${esc(s.class)}</option>`).join('');f.elements.date.value=today();$('#paymentDialog').showModal()}
 $('#paymentForm').addEventListener('submit',async e=>{e.preventDefault();if(!branchWritable())return;const f=new FormData(e.target),next=clone();const p={id:uid(),student:f.get('student'),date:f.get('date'),amount:cents(Number(f.get('amount'))),method:f.get('method'),reference:f.get('reference').trim(),notes:f.get('notes').trim()};if(!Number.isFinite(p.amount)||p.amount<=0)return;if(p.reference&&data.payments.some(x=>x.reference===p.reference)&&!confirm('This reference is already used. Record another payment with the same reference?'))return;next.payments.push(p);if(await commit(next))$('#paymentDialog').close()});
 async function carry(id){if(!branchWritable())return;const s=data.students.find(x=>x.id===id),ys=Object.keys(data.years).sort().filter(y=>y>s.year);if(!ys.length){tab='settings';render();return notice('Add the next academic year first.')}const y=ys[0];if(data.students.some(x=>x.sourceId===(s.sourceId||s.id)&&x.branchId===s.branchId&&x.year===y))return notice('This student is already enrolled in '+y);if(!confirm(`Create an enrolment for ${name(s)} in ${y}? Payments and discount start at zero. You can then update the class.`))return;const next=clone(),ns={...s,id:uid(),sourceId:s.sourceId||s.id,year:y,discount:0,date:today()};const idx=classes.indexOf(s.class);ns.class=classes[Math.min(idx+1,3)];try{ns.admission=Admissions.next(next,ns.branchId,y,true)}catch(e){return notice(e.message)}next.students.push(ns);if(await commit(next)){year=y;render();openStudent(ns.id)}}

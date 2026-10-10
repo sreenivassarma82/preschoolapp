@@ -34,7 +34,7 @@
   window.addEventListener('appinstalled', () => { promptEvent = null; install.hidden = true; });
   if ('serviceWorker' in navigator && window.isSecureContext) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js', {scope: './'})
+      navigator.serviceWorker.register('./sw.js', {scope: './',updateViaCache:'none'})
         .catch(error => console.warn('App installation setup failed. Try refreshing online.', error));
     });
   }
