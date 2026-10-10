@@ -2,9 +2,9 @@
 // Cache application files only. Records, OAuth callbacks and Microsoft requests
 // are never written to Cache Storage by this worker.
 const PREFIX = 'little-ledger-shell-' + encodeURIComponent(new URL(self.registration.scope).pathname) + '-';
-const CACHE = PREFIX + 'v15';
-const BUILD='r15';
-const FILES = ['./', 'bootstrap.js', 'index.html', 'style.css', 'excel.js', 'cloud.js', 'app.js', 'pwa.js', 'history.js', 'admin.js', 'admin-ui.js', 'performance.js', 'performance-ui.js', 'marksheet-export.js', 'navigation.js', 'admissions.js', 'assets/little-wings-logo.jpg',
+const CACHE = PREFIX + 'v16';
+const BUILD='r16';
+const FILES = ['./', 'bootstrap.js', 'index.html', 'style.css', 'excel.js', 'cloud.js', 'app.js', 'pwa.js', 'history.js', 'admin.js', 'admin-ui.js', 'performance.js', 'performance-ui.js', 'marksheet-export.js', 'school-documents.js', 'navigation.js', 'admissions.js', 'assets/little-wings-logo.jpg',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png'];
 const URLS = new Set(FILES.map(path => new URL(path, self.registration.scope).href));
 self.addEventListener('install', event => {
