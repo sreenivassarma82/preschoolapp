@@ -58,3 +58,5 @@ R22: Original Little Wings logo displayed at the app’s top-left in desktop and
 R23: App opens on Students Overview. Back/Home buttons added at the top; page changes use browser history so Android/browser Back and Forward restore previous tabs and performance forms, including branch/class/year context. Home opens Overview. Repeated renders do not add history entries. App Back closes an open admission/payment dialog first. History simulation tests cover navigation and context restoration; live Android Back verification unavailable.
 
 R24: App name and installed PWA name changed to Little Wings Preschool. Administrator app subtitle shown on desktop and Android. PWA identity and saved-data keys retained.
+
+R25: Close / Exit app button fixed at bottom left on desktop and Android. Confirms exit, prevents closing during a save and attempts window.close. Browsers may refuse programmatic close; a visible device-specific instruction then explains how to close the window/tab or swipe away the Android app. Saved records are retained.

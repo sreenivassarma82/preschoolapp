@@ -8,7 +8,7 @@ let navigationRestoring=false,navigationReady=false,navigationIndex=0,navigation
 function navigationState(){return{ledgerNavigation:true,index:navigationIndex,tab,year,branchId,classFilter,overviewAll,performanceStudent:tab==='performance'?performanceStudent:'',adminSection,branchEditing:tab==='branches'?branchEditing:'',staffEditing:tab==='staffmaster'?staffEditing:''};}
 function navigationPageKey(state){return [state.tab,state.performanceStudent,state.adminSection==='transactions'&&state.tab==='staff'?'transactions':'',state.branchEditing,state.staffEditing].join('|');}
 function trackNavigation(){
- const back=$('#appBack'),home=$('#appHome');if(back)back.onclick=appGoBack;if(home)home.onclick=()=>navigateTo('summary');
+ const back=$('#appBack'),home=$('#appHome'),exit=$('#exitApp');if(exit)exit.onclick=exitApp;if(back)back.onclick=appGoBack;if(home)home.onclick=()=>navigateTo('summary');
  if(typeof history.pushState!=='function')return;
  const state=navigationState(),key=navigationPageKey(state);
  if(!navigationReady){navigationReady=true;navigationIndex=0;state.index=0;navigationKey=key;history.replaceState(state,'');}
@@ -21,3 +21,11 @@ function restoreNavigation(state){if(!state?.ledgerNavigation)return;navigationR
  tab=Object.values(navGroups).flat().some(([id])=>id===state.tab)?state.tab:'summary';year=data.years[state.year]?state.year:Object.keys(data.years).sort().at(-1);branchId=data.branches.some(b=>b.id===state.branchId)?state.branchId:data.branches[0].id;classFilter=classes.includes(state.classFilter)?state.classFilter:'';overviewAll=!!state.overviewAll;performanceStudent=state.performanceStudent||'';adminSection=state.adminSection||'salary';branchEditing=state.branchEditing||'';staffEditing=state.staffEditing||'';certificatePreview='';subjectDraftKey='';search='';statusFilter='';navigationIndex=state.index||0;navigationKey=navigationPageKey(state);render();
  }finally{navigationRestoring=false;}}
 if(typeof window.addEventListener==='function')window.addEventListener('popstate',event=>restoreNavigation(event.state));
+
+function exitApp(){
+ if(busy||admissionSaving){notice('A save is in progress. Please wait before closing the app.');return;}
+ if(!confirm('Close Little Wings Preschool? Unsaved form changes will be lost.'))return;
+ const message=$('#exitAppMessage');
+ try{window.close();}catch{}
+ setTimeout(()=>{if(!message)return;const agent=globalThis.navigator?.userAgent||'';message.textContent=/Android/i.test(agent)?'To close: open Recent apps and swipe Little Wings Preschool away, or close this browser tab.':/Windows/i.test(agent)?'To close: press Alt + F4, or close this browser tab.':'To close: use your device’s app switcher or close this browser tab.';message.hidden=false;},300);
+}
