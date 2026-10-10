@@ -19,3 +19,5 @@
 .performance-name{border:0;background:transparent;text-align:left;text-decoration:underline;font-weight:600;padding:8px 0}.performance-name.performance-complete{color:#15803d}.performance-name.performance-incomplete{color:#000}.performance-editor{width:100%;max-width:none}.performance-editor .panel{width:100%}.performance-editor .table-wrap{overflow-x:auto}
 
 .school-addresses{font-size:11px;line-height:1.5;margin-top:24px;border-top:1px solid #142943;padding-top:8px;white-space:normal}.bonafide{background:#fff;color:#111;max-width:850px;margin:24px auto;padding:32px}.certificate-body{border:1px dashed #142943;padding:32px;line-height:1.6}.certificate-body h2{text-align:center;text-decoration:underline;margin-bottom:40px}.certificate-body p{white-space:pre-wrap;overflow-wrap:anywhere}.bonafide .marksheet-logo{max-width:400px;margin:auto;display:block}#certificateMessage{color:#982b22;margin:12px 0}
+
+.observations-filled{color:#15803d;background:#dcfce7}.report-remarks{min-height:72px;white-space:pre-wrap}
