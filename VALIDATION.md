@@ -38,3 +38,5 @@ Admission errors: `node tests/admission-errors.cjs` passes inline required-field
 Log management: `node tests/log-management.cjs` checks deletion of stored and pending activities, clear-all without changing school records, cancellation, stale pending and backup suppression, new activity after clearing, and atomic cloud success/failure. History, admissions, performance and PWA regressions also pass. Live Microsoft storage and device UI were not tested in this session.
 
 R14 admission fix: actual HTML button onclick tested through bootstrap and admission save, including validation, persisted student and success notice, missing handler and thrown error. Existing admission tests cover slow cloud saves and duplicate taps. Versioned shell assets and offline caching tested with mocked service worker. No live Android/browser verification available.
+
+R15: Performance opens a branch/class/term roster showing status, total/out-of and percentage. Click a student name for the full-width form. Green requires all assessed marks and all 17 observations; other names stay black. Tests cover completion, partial records, empty classes and independent term summaries.

@@ -15,3 +15,5 @@
 #admissionNotice:not([hidden]){position:sticky;top:0;z-index:3;background:#fff0ee;color:#982b22;border:1px solid #e7a79e;border-radius:8px;padding:12px 14px;margin:12px 0 18px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}#studentForm [aria-invalid="true"]{border:2px solid #b42335}#studentForm footer{position:sticky;bottom:-26px;background:white;padding:14px 0;margin-bottom:-12px}
 
 #admissionFeedback{flex-basis:100%;font-size:14px;color:#982b22;white-space:pre-wrap;overflow-wrap:anywhere;text-align:left}#studentForm footer{flex-wrap:wrap}#appVersion{font-size:12px;color:#65748a}
+
+.performance-name{border:0;background:transparent;text-align:left;text-decoration:underline;font-weight:600;padding:8px 0}.performance-name.performance-complete{color:#15803d}.performance-name.performance-incomplete{color:#000}.performance-editor{width:100%;max-width:none}.performance-editor .panel{width:100%}.performance-editor .table-wrap{overflow-x:auto}

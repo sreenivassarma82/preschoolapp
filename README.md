@@ -185,3 +185,5 @@ Open **Admin → Activity history**. Each activity row has **Delete log**. The t
 When OneDrive or a folder is connected, the log changes save to that shared ledger; other devices must refresh the app and reload the shared folder. Browser-only storage changes affect that browser only. A failed save leaves the logs intact. Deleted-entry markers and a log generation prevent older pending queues or ordinary backup restores from reintroducing removed logs. Previously downloaded files and OneDrive version history remain separate copies.
 
 Version r14: Save admission displays progress beside the button and reports validation or loading errors. Open https://sreenivassarma82.github.io/preschoolapp/?update=r14 online and confirm Version r14 in the header. Do not clear browser storage to update.
+
+R15: Performance opens a branch/class/term roster showing status, total/out-of and percentage. Click a student name for the full-width form. Green requires all assessed marks and all 17 observations; other names stay black. Tests cover completion, partial records, empty classes and independent term summaries.
