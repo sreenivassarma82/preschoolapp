@@ -81,6 +81,18 @@ Academic years use separate numeric Start year and End year fields. The end year
 
 Saving OneDrive settings does not activate cloud storage. Browser or local-folder storage stays available until you successfully connect and load/initialize OneDrive records. If an older incomplete setup blocks changes, use “Use browser storage for now” near the academic-year form. This is an explicit storage change, not a promise of automatic later synchronization. Loading existing cloud records may replace browser-only changes; download a JSON backup first.
 
-After Microsoft sign-in, the app connects the configured folder and asks whether to load existing records or initialize a new file. Existing records are not overwritten just because you sign in. OAuth's short-lived PKCE verifier/state is temporarily stored in localStorage so a callback in another same-origin tab can finish sign-in; it is removed when the callback arrives and cannot be accepted after 15 minutes. Microsoft access/refresh tokens remain in sessionStorage.
+After a first Microsoft sign-in, the app opens the OneDrive folder browser. After choosing a folder, it asks whether to load existing records or initialize a new file. Signing back into an already connected account reloads the remembered folder. Existing records are not overwritten just because you sign in. OAuth's short-lived PKCE verifier/state is temporarily stored in localStorage so a callback in another same-origin tab can finish sign-in; it is removed when the callback arrives and cannot be accepted after 15 minutes. Microsoft access/refresh tokens remain in sessionStorage.
 
 If sign-in reports AADSTS50011, add the exact app URL shown in Settings under Microsoft Entra → Authentication as a Single-page application (SPA) redirect URI. AADSTS9002326 or a client-secret requirement commonly means the registration uses Web instead of SPA. Check Application (client) ID and supported account types for AADSTS700016. Consent errors may require approval of Files.ReadWrite delegated permission by your school administrator. The app displays Microsoft’s error details with relevant setup guidance.
+
+## Choose a OneDrive folder from the app
+
+In Year & storage settings → OneDrive cloud:
+
+1. Save your Microsoft Application (client) ID and account type, then sign in with Microsoft. The one-time Microsoft app registration is still required.
+2. Tap “Browse OneDrive folders”. On first sign-in the browser opens automatically.
+3. Tap folder names to open them. Use the breadcrumb buttons to return to a parent folder. You can enter a new folder name and tap “Create folder”.
+4. Once inside your desired folder, tap “Use this folder”. The OneDrive root cannot be selected: choose a dedicated subfolder for preschool records.
+5. Confirm loading existing records or creating a records file from the current browser records. Existing records are never overwritten merely by selecting a folder.
+
+The selected folder's path and stable OneDrive item ID are remembered in this browser. You do not need to select it every visit; its stable ID also survives a rename or move within the same account. A new device requires the same Microsoft setup and an initial folder selection. The browser lists folders owned by the signed-in OneDrive account; shared-library/SharePoint folders and shortcuts are not included. To change the folder, use “Browse OneDrive folders” again. The typed path option remains available.
