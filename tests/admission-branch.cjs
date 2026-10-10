@@ -1,0 +1,18 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),{webcrypto}=require('crypto');
+const mem=()=>{const m=new Map();return{getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)}};
+function setup(){const els=new Map();const el=s=>{if(!els.has(s))els.set(s,{textContent:'',innerHTML:'',value:'',events:{},addEventListener(k,f){this.events[k]=f},classList:{toggle(){}},scrollIntoView(){}});return els.get(s)};const x={console,crypto:webcrypto,Blob,TextEncoder,Uint8Array,DataView,URL,URLSearchParams,Intl,structuredClone,setTimeout:()=>1,localStorage:mem(),sessionStorage:mem(),location:{origin:'https://school.example',pathname:'/preschoolapp/',search:'',hash:'',protocol:'https:',hostname:'school.example',assign(v){this.assigned=v}},history:{replaceState(){}},btoa:s=>Buffer.from(s,'binary').toString('base64'),alert(){},confirm:()=>true,FormData:class{constructor(o){this.o=o}get(k){return this.o[k]}},document:{querySelector:el,querySelectorAll:()=>[],activeElement:null},indexedDB:{open(){throw Error('Unavailable')}}};x.window=x;vm.createContext(x);for(const f of ['cloud.js','history.js','excel.js','admin.js','admin-ui.js','app.js'])vm.runInContext(fs.readFileSync(require('path').join(__dirname,'..',f),'utf8'),x);return{x,el,run:s=>vm.runInContext(s,x),submit:async(s,o)=>el(s).events.submit({preventDefault(){},target:o})}}
+
+(async()=>{const {x,el,run,submit}=setup();await Promise.resolve();el('#editor').showModal=()=>{};el('#editor').close=()=>{};
+await submit('#branchForm',{code:'B2',name:'Second branch'});const bid=run('data.branches[1].id');
+await run(`commit((()=>{const n=clone();n.branches[1].fees[year]={...n.years[year].fees,Playgroup:2000};return n})())`);
+run('openStudent()');assert.match(el('#fields').innerHTML,/^<label>Branch \*/);assert.match(el('#fields').innerHTML,/Second branch/);
+const fields={branchId:bid,first:'Student',class:'Playgroup',date:'2026-10-10',discount:'500',mobile:'001234',admission:'A1',photoFile:{size:0}};
+await submit('#studentForm',fields);assert.equal(run('data.students.length'),1);assert.equal(run('data.students[0].branchId'),bid);assert.equal(run('branchId'),bid);assert.equal(run('net(data.students[0])'),1500);
+await submit('#studentForm',fields);assert.equal(run('data.students.length'),1); // Duplicate in chosen branch blocked.
+run('editing=null');await submit('#studentForm',{...fields,branchId:run('Admin.MAIN'),discount:'0'});assert.equal(run('data.students.length'),2); // Same admission number in another branch allowed.
+run(`openStudent(data.students[0].id)`);assert.match(el('#fields').innerHTML,/name="branchId" required disabled/);
+await submit('#studentForm',{...fields,branchId:run('Admin.MAIN'),first:'Edited'});assert.equal(run('data.students[0].branchId'),bid); // Edits keep existing branch.
+run('editing=null');await run(`commit((()=>{const n=clone();n.branches[1].archived=true;return n})())`);run('branchId=Admin.MAIN');await submit('#studentForm',{...fields,admission:'A2'});assert.equal(run('data.students.length'),2);
+run('openStudent()');assert(!el('#fields').innerHTML.includes('Second branch'));await submit('#studentForm',{...fields,branchId:'missing',admission:'A2'});assert.equal(run('data.students.length'),2);
+console.log('PASS: branch-first admissions, selected-branch fees and uniqueness, post-save branch selection, locked existing branch, invalid/archived branch rejection');
+})().catch(e=>{console.error(e);process.exitCode=1});
