@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Little wings preschool ledger",
-  "short_name": "Little wings preschool ledger",
-  "description": "Preschool admissions, parents, yearly fees and payment records.",
+  "name": "Little Wings Preschool",
+  "short_name": "Little Wings Preschool",
+  "description": "Administrator app for preschool admissions, parents, yearly fees and payment records.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

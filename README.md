@@ -1,4 +1,4 @@
-# Little wings preschool ledger — Android and Windows
+# Little Wings Preschool — Android and Windows
 
 A responsive browser application, ready for GitHub Pages. No build tools or dependencies are required. Use Chrome on Android, or Chrome/Edge on Windows.
 
@@ -69,7 +69,7 @@ After GitHub Pages has finished deploying, open https://sreenivassarma82.github.
 
 - Android Chrome: refresh the website while online, then tap the app's “Install app” button when it appears, or Chrome's ⋮ menu → Add to Home screen → Install. Menu labels vary by Chrome version. Chrome may require a little interaction with the page before offering installation.
 - Windows Chrome: use “Install app” in the page or the install icon in the address bar. Edge also offers ⋯ → Apps → Install this site as an app.
-- Open Little wings preschool ledger from your home screen or Start menu. The installed app uses the same records/storage settings as its browser profile. Microsoft may require sign-in again, especially when switching between browser and installed app.
+- Open Little Wings Preschool from your home screen or Start menu. The installed app uses the same records/storage settings as its browser profile. Microsoft may require sign-in again, especially when switching between browser and installed app.
 
 The manifest uses relative URLs so GitHub's repository subdirectory works correctly. App icons include 192px, 512px and maskable variants. The service worker caches only application files. It does not cache records, tokens, Microsoft requests or OAuth callback URLs. Offline mode opens the interface and allows browser-only records to be viewed/edited; cloud saves still require internet and loaded OneDrive records. Keep backups.
 

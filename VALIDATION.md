@@ -56,3 +56,5 @@ R21: Gender selects His/Her in certificate birth-date wording and his/her in the
 R22: Original Little Wings logo displayed at the app’s top-left in desktop and mobile layouts. Green/white theme uses the sampled logo green #71bf1b, with darker green #347608 for readable white button text, green navigation, white panels and green borders. PWA theme/background colours updated. Logo asset unchanged. Existing functional tests pass; live device visual verification unavailable.
 
 R23: App opens on Students Overview. Back/Home buttons added at the top; page changes use browser history so Android/browser Back and Forward restore previous tabs and performance forms, including branch/class/year context. Home opens Overview. Repeated renders do not add history entries. App Back closes an open admission/payment dialog first. History simulation tests cover navigation and context restoration; live Android Back verification unavailable.
+
+R24: App name and installed PWA name changed to Little Wings Preschool. Administrator app subtitle shown on desktop and Android. PWA identity and saved-data keys retained.
