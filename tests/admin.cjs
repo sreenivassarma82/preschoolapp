@@ -4,7 +4,7 @@ function setup(){const els=new Map();const el=s=>{if(!els.has(s))els.set(s,{text
 
 (async()=>{
  const {x,el,run,submit}=setup();await Promise.resolve();
- assert.equal(run('data.branches[0].name'),'Main branch');
+ assert.equal(run('data.branches[0].name'),'Select branch');
  await submit('#branchForm',{code:'B2',name:'Second branch',manager:'Manager',phone:'0123'});
  assert.equal(run('data.branches.length'),2);const bid=run('data.branches[1].id');
  await run(`commit((()=>{const n=clone();n.years[year].fees.Playgroup=1000;n.branches[1].fees[year]={...n.years[year].fees,Playgroup:2000};n.students.push({id:uid(),branchId:Admin.MAIN,year,class:'Playgroup',first:'Main',discount:100},{id:uid(),branchId:'${bid}',year,class:'Playgroup',first:'Second',discount:200});n.payments.push({id:uid(),student:n.students[1].id,date:today(),amount:500,method:'Cash'});return n})())`);

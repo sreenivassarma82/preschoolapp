@@ -8,7 +8,8 @@ const Admin=(()=>{
  const dateOK=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s;
  function normalize(d){
   if(!d||!Array.isArray(d.students))return;
-  d.branches??=[{id:MAIN,code:'MAIN',name:'Main branch',address:'',phone:'',email:'',manager:'',notes:'',archived:false,fees:{}}];
+  d.branches??=[{id:MAIN,code:'MAIN',name:'Select branch',address:'',phone:'',email:'',manager:'',notes:'',archived:false,fees:{}}];
+  for(const b of d.branches)if(b.id===MAIN&&b.name==='Main branch')b.name='Select branch';
   d.staff??=[];d.staffEntries??=[];d.attendance??=[];d.salarySnapshots??=[];
   for(const s of d.students)s.branchId??=MAIN;
   for(const x of d.deletedRecords||[])if(x.kind==='student')x.student.branchId??=MAIN;
