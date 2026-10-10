@@ -9,7 +9,7 @@ run("navigateTo('certificates')");assert.match(el('#view').innerHTML,/certificat
 const form={student:run('data.students[0].id'),date:'2026-06-25',place:'Badlapur',principal:'Deepti Sarma',status:'is'};
 await submit('#certificateForm',form);assert.match(el('#view').innerHTML,/BONAFIDE CERTIFICATE/);assert.match(el('#view').innerHTML,/Mr\. Synthetic/);assert.match(el('#view').innerHTML,/04 June 2021/);assert.match(el('#view').innerHTML,/Sample Father/);assert.match(el('#view').innerHTML,/Sample Mother/);assert.match(el('#view').innerHTML,/2026-27/);
 for(const a of run('SchoolDocuments.addresses'))assert(el('#view').innerHTML.includes(a.replace(/&/g,'&amp;')));
-run("certificateClass='Nursery';render()");assert.match(el('#view').innerHTML,/No students/);run("certificateClass='';render()");
+run("setTopClass('Nursery');render()");assert.match(el('#view').innerHTML,/No students/);run("setTopClass('');render()");
 assert.throws(()=>run("SchoolDocuments.details({...data.students[0],dob:''},certificateOptions)"),/date of birth/);
 assert.throws(()=>run("SchoolDocuments.details(data.students[0],{...certificateOptions,date:'2026-02-30'})"),/valid date/);
 const draws=[];const ctx={font:'',fillStyle:'',textAlign:'',strokeStyle:'',fillRect(){},drawImage(){},strokeRect(){},fillText(t,x,y){draws.push({t:String(t),x,y})},measureText(t){return{width:String(t).length*12}}};const jpg=fs.readFileSync(require('path').join(__dirname,'../assets/little-wings-logo.jpg'));
