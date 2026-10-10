@@ -6,7 +6,7 @@ function setup(){const els=new Map();const el=s=>{if(!els.has(s))els.set(s,{text
 await submit('#branchForm',{code:'B2',name:'Second branch'});const bid=run('data.branches[1].id');
 await run(`commit((()=>{const n=clone();n.branches[1].fees[year]={...n.years[year].fees,Playgroup:2000};return n})())`);
 run('openStudent()');assert.match(el('#fields').innerHTML,/^<label>Select branch \*/);assert.match(el('#fields').innerHTML,/Second branch/);
-const fields={branchId:bid,first:'Student',class:'Playgroup',date:'2026-10-10',discount:'500',mobile:'001234',admission:'A1',photoFile:{size:0}};
+const fields={branchId:bid,first:'Student',gender:'Male',class:'Playgroup',date:'2026-10-10',discount:'500',mobile:'001234',admission:'A1',photoFile:{size:0}};
 await submit('#studentForm',fields);assert.equal(run('data.students.length'),1);assert.equal(run('data.students[0].branchId'),bid);assert.equal(run('branchId'),bid);assert.equal(run('net(data.students[0])'),1500);
 await submit('#studentForm',fields);assert.equal(run('data.students.length'),2); // Second admission receives a fresh number.
 run('editing=null');await submit('#studentForm',{...fields,branchId:run('Admin.MAIN'),discount:'0'});assert.equal(run('data.students.length'),3); // Another branch has a separate generated prefix.

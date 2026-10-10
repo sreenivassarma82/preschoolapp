@@ -9,7 +9,7 @@ const html=fs.readFileSync(require('path').join(__dirname,'..','index.html'),'ut
 assert.match(html,/<form id="studentForm" novalidate>/);
 const click=html.match(/id="saveAdmissionButton"[^>]*onclick="([^"]+)"/)[1];
 assert.match(html,/id="saveAdmissionButton" type="button"/);
-const form=el('#studentForm');Object.assign(form,{branchId:run('Admin.MAIN'),first:'Click Student',class:'Playgroup',date:'2026-10-10',discount:'0',mobile:'0123',photoFile:null});
+const form=el('#studentForm');Object.assign(form,{branchId:run('Admin.MAIN'),first:'Click Student',gender:'Male',class:'Playgroup',date:'2026-10-10',discount:'0',mobile:'0123',photoFile:null});
 run('openStudent()');
 form.elements=[{name:'mobile',checkValidity:()=>false,validationMessage:'Please enter a phone number.'}];
 await run(click);assert.match(el('#admissionFeedback').textContent,/phone number/);assert.equal(run('data.students.length'),0);
