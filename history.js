@@ -3,11 +3,15 @@ const History=(()=>{
  const KEY='ledger-activity-pending';let pending=[];try{pending=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(pending))pending=[];}catch{}
  const actor=()=>{const name=localStorage.getItem('ledger-operator-name')?.trim();const account=OneDrive.accountLabel();return account?(name?name+' ('+account+')':account):name||'Unnamed operator';};
  const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(pending))}catch{}};
- function event(datasetId,action,subject='',details='',year='',outcome='Success'){return {id:crypto.randomUUID(),datasetId,at:new Date().toISOString(),actor:actor(),action,subject,details,year,outcome};}
+ function event(datasetId,action,subject='',details='',year='',outcome='Success'){return {id:crypto.randomUUID(),datasetId,logGeneration:typeof data!=='undefined'&&data?.datasetId===datasetId?(data.logGeneration||'legacy'):'legacy',at:new Date().toISOString(),actor:actor(),action,subject,details,year,outcome};}
  function queue(e){pending.push(e);persist();}
  function merge(...lists){const seen=new Set();return lists.flat().filter(e=>{if(!e||seen.has(e.id))return false;seen.add(e.id);return true});}
  function synced(ids){const set=new Set(ids);pending=pending.filter(e=>!set.has(e.id));persist();}
  function moveSetup(from,to){if(from===to)return;for(const e of pending)if(e.datasetId===from&&/^(App|Microsoft|OneDrive|Connection|Folder)/.test(e.action))e.datasetId=to;persist();}
+ function normalize(d){if(d){d.logGeneration??='legacy';d.deletedLogIds??=[];}}
+ function validate(d){normalize(d);if(typeof d.logGeneration!=='string'||!d.logGeneration||!Array.isArray(d.deletedLogIds)||d.deletedLogIds.some(id=>typeof id!=='string'||!id))throw Error('Invalid activity log settings.');}
+ function visible(d,...lists){const removed=new Set(d.deletedLogIds||[]),generation=d.logGeneration||'legacy';return merge(...lists).filter(e=>(e.logGeneration||'legacy')===generation&&!removed.has(e.id));}
+ function prune(d){const allowed=new Set(visible(d,pending.filter(e=>e.datasetId===d.datasetId)).map(e=>e.id));const old=pending.length;pending=pending.filter(e=>e.datasetId!==d.datasetId||allowed.has(e.id));if(pending.length!==old)persist();}
  function changes(before,after){const events=[],emit=(a,s,d,y)=>events.push(event(after.datasetId,a,s,d,y));
   for(const s of after.students){const old=before.students.find(x=>x.id===s.id);if(!old){const restored=before.deletedRecords.some(x=>x.kind==='student'&&x.student.id===s.id);emit(restored?'Student restored':'Student added',[s.first,s.middle,s.surname].filter(Boolean).join(' '),'Branch: '+(after.branches?.find(b=>b.id===s.branchId)?.name||'Select branch')+'; Class: '+s.class,s.year);}else{const fields=Object.keys(s).filter(k=>JSON.stringify(s[k])!==JSON.stringify(old[k]));if(fields.length)emit('Student updated',[s.first,s.middle,s.surname].filter(Boolean).join(' '),'Changed fields: '+fields.join(', '),s.year);}}
   for(const s of before.students)if(!after.students.some(x=>x.id===s.id))emit('Student deleted',[s.first,s.middle,s.surname].filter(Boolean).join(' '),'Removed from active enrolments. Use Deleted records or a previous backup for recovery.',s.year);
@@ -18,5 +22,5 @@ const History=(()=>{
   if(before.school!==after.school||before.currency!==after.currency)emit('School settings updated',after.school,'Changed: '+[before.school!==after.school?'school name':'',before.currency!==after.currency?'currency':''].filter(Boolean).join(', '),'');
   return events;
  }
- return{event,queue,merge,synced,moveSetup,changes,actor,pending:dataset=>pending.filter(e=>!dataset||e.datasetId===dataset)};
+ return{event,queue,merge,synced,moveSetup,changes,actor,normalize,validate,visible,prune,pending:dataset=>pending.filter(e=>!dataset||e.datasetId===dataset)};
 })();

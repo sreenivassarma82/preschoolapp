@@ -177,3 +177,9 @@ New admissions receive a read-only number on successful save: `BRANCHCODE-STARTY
 ## Admission save errors
 
 Admission validation and storage failures appear inside the open admission form. Required or invalid fields also show a field-specific message. Errors identify the selected branch, discount/annual fee, invalid dates, photo size/type/read failures, missing OneDrive connection and failed cloud saves. Failed saves retain entered fields and do not consume an admission number. A photo is optional; the no-photo path also accepts a missing file value. While saving, the save button reads Saving… and repeated taps are ignored. A successful save closes the form, opens Students → Admissions and displays the student's saved number.
+
+## Delete or reset activity logs
+
+Open **Admin → Activity history**. Each activity row has **Delete log**. The toolbar has **Reset all activity logs**, which clears stored and pending activities across all branches and years in the current ledger. Both actions ask for confirmation. Student, payment, fee, staff, attendance, subject, performance, admission numbering and Deleted records recovery data are retained. New activities continue to be recorded after a reset.
+
+When OneDrive or a folder is connected, the log changes save to that shared ledger; other devices must refresh the app and reload the shared folder. Browser-only storage changes affect that browser only. A failed save leaves the logs intact. Deleted-entry markers and a log generation prevent older pending queues or ordinary backup restores from reintroducing removed logs. Previously downloaded files and OneDrive version history remain separate copies.
