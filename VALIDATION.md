@@ -14,3 +14,5 @@ Generated .xlsx was opened with openpyxl and checked for four sheets, numeric fe
 JavaScript syntax checks passed for app.js, cloud.js and excel.js.
 
 Limitations: real browser/device QA was not run because the execution sandbox blocked Chromium startup. Actual Microsoft sign-in and live OneDrive operations have not been tested: they require the owner's Microsoft application registration and consent. Before using real student records, test sign-in and a dummy admission on Android and Windows, reload from the second device, record a dummy payment, export Excel, and verify backup/restore. Use one editor at a time.
+
+Setup regression checks passed for saving unconnected OneDrive settings without blocking local academic years, numeric start/end year entry, consecutive validation, explicitly switching an incomplete cloud setup to local storage, activating cloud after load, cross-tab PKCE callbacks, and Microsoft SPA registration error guidance. Previous fee/export and mocked Graph checks also passed after these changes. Live account sign-in remains unverified.

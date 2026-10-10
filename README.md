@@ -74,3 +74,13 @@ After GitHub Pages has finished deploying, open https://sreenivassarma82.github.
 The manifest uses relative URLs so GitHub's repository subdirectory works correctly. App icons include 192px, 512px and maskable variants. The service worker caches only application files. It does not cache records, tokens, Microsoft requests or OAuth callback URLs. Offline mode opens the interface and allows browser-only records to be viewed/edited; cloud saves still require internet and loaded OneDrive records. Keep backups.
 
 If Chrome still offers only a shortcut, confirm that deployment has finished, close and reopen the live website, and refresh online. Do not clear browser storage merely to refresh the app, because that can remove locally stored student records and settings. Native APK/EXE packages are not required for this installable web app.
+
+## Troubleshooting setup
+
+Academic years use separate numeric Start year and End year fields. The end year fills automatically when you change the start year; the two years must be consecutive.
+
+Saving OneDrive settings does not activate cloud storage. Browser or local-folder storage stays available until you successfully connect and load/initialize OneDrive records. If an older incomplete setup blocks changes, use “Use browser storage for now” near the academic-year form. This is an explicit storage change, not a promise of automatic later synchronization. Loading existing cloud records may replace browser-only changes; download a JSON backup first.
+
+After Microsoft sign-in, the app connects the configured folder and asks whether to load existing records or initialize a new file. Existing records are not overwritten just because you sign in. OAuth's short-lived PKCE verifier/state is temporarily stored in localStorage so a callback in another same-origin tab can finish sign-in; it is removed when the callback arrives and cannot be accepted after 15 minutes. Microsoft access/refresh tokens remain in sessionStorage.
+
+If sign-in reports AADSTS50011, add the exact app URL shown in Settings under Microsoft Entra → Authentication as a Single-page application (SPA) redirect URI. AADSTS9002326 or a client-secret requirement commonly means the registration uses Web instead of SPA. Check Application (client) ID and supported account types for AADSTS700016. Consent errors may require approval of Files.ReadWrite delegated permission by your school administrator. The app displays Microsoft’s error details with relevant setup guidance.
