@@ -15,9 +15,9 @@ function trackNavigation(){
  else if(!navigationRestoring){if(key!==navigationKey){navigationIndex++;state.index=navigationIndex;history.pushState(state,'');}else history.replaceState(state,'');navigationKey=key;}
  if(back)back.disabled=navigationIndex===0;if(home)home.disabled=tab==='summary';
 }
-function appGoBack(){if($('#editor')?.open){if(!admissionSaving)$('#editor').close();return;}if($('#paymentDialog')?.open){$('#paymentDialog').close();return;}if(history.state?.ledgerNavigation&&history.state.index>0&&typeof history.back==='function')history.back();else navigateTo('summary');}
+function appGoBack(){if($('#excelExportDialog')?.open){$('#excelExportDialog').close();return;}if($('#editor')?.open){if(!admissionSaving)$('#editor').close();return;}if($('#paymentDialog')?.open){$('#paymentDialog').close();return;}if(history.state?.ledgerNavigation&&history.state.index>0&&typeof history.back==='function')history.back();else navigateTo('summary');}
 function restoreNavigation(state){if(!state?.ledgerNavigation)return;navigationRestoring=true;try{
- for(const id of ['editor','paymentDialog','cloudFolderPicker'])if($('#'+id)?.open)$('#'+id).close();
+ for(const id of ['editor','paymentDialog','cloudFolderPicker','excelExportDialog'])if($('#'+id)?.open)$('#'+id).close();
  tab=Object.values(navGroups).flat().some(([id])=>id===state.tab)?state.tab:'summary';year=data.years[state.year]?state.year:Object.keys(data.years).sort().at(-1);branchId=data.branches.some(b=>b.id===state.branchId)?state.branchId:data.branches[0].id;classFilter=classes.includes(state.classFilter)?state.classFilter:'';overviewAll=!!state.overviewAll;performanceStudent=state.performanceStudent||'';adminSection=state.adminSection||'salary';branchEditing=state.branchEditing||'';staffEditing=state.staffEditing||'';certificatePreview='';subjectDraftKey='';search='';statusFilter='';navigationIndex=state.index||0;navigationKey=navigationPageKey(state);render();
  }finally{navigationRestoring=false;}}
 if(typeof window.addEventListener==='function')window.addEventListener('popstate',event=>restoreNavigation(event.state));
