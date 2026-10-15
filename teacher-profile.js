@@ -1,11 +1,14 @@
  'use strict';
 const TeacherProfile=(()=>{
  const ROLE='little-wings-device-profile',PIN='little-wings-admin-pin';
+ // Direct Teacher entry is applied before the ledger renders.
+ if(new URLSearchParams(location.search).get('profile')==='teacher')localStorage.setItem(ROLE,'teacher');
  const teacher=()=>localStorage.getItem(ROLE)==='teacher';
  async function digest(value){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))).map(x=>x.toString(16).padStart(2,'0')).join('');}
  async function switchProfile(){try{
   if(busy||admissionSaving||collectionSaving)return notice('Wait for the current save to finish.');
   if(teacher()){
+   if(!localStorage.getItem(PIN))return notice('Administrator PIN has not been set up in this browser. Ask the administrator to complete device setup before using the Teacher link.');
    const pin=window.prompt('Administrator PIN');if(pin===null)return;
    const saved=JSON.parse(localStorage.getItem(PIN)||'null');
    if(!saved||await digest(saved.salt+pin)!==saved.hash)return notice('Incorrect administrator PIN.');
