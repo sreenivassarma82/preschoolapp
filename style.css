@@ -41,3 +41,5 @@
 .student-photo-control{min-width:0}.photo-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.photo-paste-area{border:2px dashed #71bf1b;border-radius:8px;background:#f4faef;padding:16px;min-height:70px;cursor:text;overflow-wrap:anywhere}.photo-paste-area:focus{outline:3px solid #347608;outline-offset:2px}.student-photo-preview{display:block;width:120px;max-width:100%;height:140px;object-fit:contain;margin:12px 0;border:1px solid #cbdcc3;background:white}#studentPhotoStatus{font-size:13px;color:#347608;margin-top:10px;white-space:normal}
 
 .file-transfer-panel{border-left:4px solid #71bf1b;margin:12px 0}.file-transfer-panel[hidden]{display:none}.file-transfer-panel ol{padding-left:22px;margin:8px 0}.file-transfer-panel li{margin:8px 0;overflow-wrap:anywhere}.file-transfer-panel small{color:#56624d}
+
+#financialPnl .table-wrap{max-height:75vh;overflow:auto}#financialPnl .pnl-total th,#financialPnl .pnl-total td{font-weight:700;background:#f0f8e9}#financialPnl .pnl-net th,#financialPnl .pnl-net td{font-weight:800;background:#dfefcf;border-top:2px solid #519820}
