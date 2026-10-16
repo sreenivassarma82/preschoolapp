@@ -340,3 +340,6 @@ Admissions includes an **Admission information status** filter: ALL, Complete an
 
 
 Progress-report PDF downloads always use one A4 page. The report title is centred, with the space below it reduced by half a text line compared with r62. The complete report is measured before drawing and uniformly fitted above the unchanged address footer, so subjects, observations, remarks and signatures are retained on the page. Longer reports use smaller print to fit. Excel report formatting is unchanged.
+
+
+In Students → Student collections, clicking a student's name in collection history opens a read-only past-payments popup. The entry form and Record collection popup also have **View selected student's past payments** buttons, including for students with no receipts yet. This shows all saved payments for that exact admission/academic year, independently of receipt search/month/head/method filters, with dated receipt details, separate School/Annual day/Picnic totals, overall collections and regular school fee/discount/due/credit summary. Students with the same name remain separate. Deleted receipts and retired Sports day collections are excluded. The popup works in the ALL-branches read-only view; Teacher profiles cannot open it. Closing the popup or using Back retains the collection draft.
