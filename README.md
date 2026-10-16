@@ -303,3 +303,12 @@ On other devices, select Connect / reload ledger and open the same OneDrive file
 Connect / reload ledger is available before Administrator login, including Teacher view. If connection settings are not present, import the public connection-settings JSON from the original device or enter its Microsoft app/tenant/folder settings. New connection exports include the remembered folder/drive IDs where available; Microsoft permissions are still required. This transfers no administrator password or Microsoft token.
 
 JSON restores and record resets preserve the current shared administrator credential. Teacher edits cannot change it. Credential synchronization does not change admissions, payments, staff, expenses or performance records. App-level role restrictions continue to depend on browser/device and OneDrive access; this is not a separate server-enforced Microsoft identity. All devices must use the updated app and the same shared ledger.
+
+
+## Mid-year admission cancellation
+
+In Students → Admissions, select the academic year and a specific branch, then choose **Cancel admission** beside a student. Record the cancellation date and reason and save. The date must be on/after the admission date and no later than today. This separate form also works for imported students whose other admission details are still incomplete.
+
+Use **Update cancellation / reinstate** to correct the date/reason or make the admission active again. The admission status filter offers ALL, Active and Cancelled. Changes synchronize with the shared ledger through the normal save process and are recorded in Activity history. Student data, photos, performance and collections remain intact. Cancellation does not automatically waive fees or refund collections; balances continue to include cancelled admissions.
+
+Home and Overview show active student counts and cancelled admission counts. Home period snapshots apply cancellations effective by the selected end date. Excel student reports include status, cancellation date and reason; filtered downloads respect the admission status filter. Carrying a student forward creates a new active admission for the next academic year. Teachers cannot cancel or reinstate admissions.
