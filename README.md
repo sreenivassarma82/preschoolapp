@@ -331,3 +331,6 @@ The admission form shows the applicable annual fee from the master directly belo
 
 
 Admission cancellation checks the ledger identity and saved record contents when checking for stale forms. Background activity-history uploads can change the storage revision without invalidating an open cancellation form. Actual record changes still require closing/reopening the form, and OneDrive ETag/local-folder conflict checks remain active during save.
+
+
+Student collections supports student search by name, admission number, parent or contact number, plus collection month, collection head and payment method. Branch, academic year and class use the top selectors. Clear collection filters resets the local filters. Search narrows the entry student list and saved history; month/head/method filter saved receipts only. Changing these filters preserves entered collection amounts and other draft fields. The ALL-branches view uses the same filters and remains read-only. Download filtered collections Excel exports matching receipt rows, per-head totals and applied filters. The Record collection popup also supports student search and a Class filter within the top-level selection, without clearing payment details.
