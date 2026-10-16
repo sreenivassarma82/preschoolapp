@@ -334,3 +334,6 @@ Admission cancellation checks the ledger identity and saved record contents when
 
 
 Student collections supports student search by name, admission number, parent or contact number, plus collection month, collection head and payment method. Branch, academic year and class use the top selectors. Clear collection filters resets the local filters. Search narrows the entry student list and saved history; month/head/method filter saved receipts only. Changing these filters preserves entered collection amounts and other draft fields. The ALL-branches view uses the same filters and remains read-only. Download filtered collections Excel exports matching receipt rows, per-head totals and applied filters. The Record collection popup also supports student search and a Class filter within the top-level selection, without clearing payment details.
+
+
+Admissions includes an **Admission information status** filter: ALL, Complete and Incomplete. It uses the same saved-record completeness rule as green/black names, including the either-parent-name rule. It combines with the existing Active/Cancelled admission status, branch/year/class, search and fee filters in individual-branch and ALL-branch lists. Filtered student Excel downloads honor it when screen filters are enabled; Back restores the selection. It does not filter other student modules.
