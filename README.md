@@ -343,3 +343,6 @@ Progress-report PDF downloads always use one A4 page. The report title is centre
 
 
 In Students → Student collections, clicking a student's name in collection history opens a read-only past-payments popup. The entry form and Record collection popup also have **View selected student's past payments** buttons, including for students with no receipts yet. This shows all saved payments for that exact admission/academic year, independently of receipt search/month/head/method filters, with dated receipt details, separate School/Annual day/Picnic totals, overall collections and regular school fee/discount/due/credit summary. Students with the same name remain separate. Deleted receipts and retired Sports day collections are excluded. The popup works in the ALL-branches read-only view; Teacher profiles cannot open it. Closing the popup or using Back retains the collection draft.
+
+
+Administrator login and profile locking are available during background activity-only uploads. These uploads may set the general storage-busy flag but do not change student, performance or financial records. The commit queue separately counts real record saves (including queued saves, credential updates, resets and log deletions); profile changes remain blocked until those complete. Shared password verification and OneDrive conflict protection are unchanged.
