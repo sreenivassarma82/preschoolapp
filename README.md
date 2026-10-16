@@ -322,3 +322,6 @@ The report separates School fees, Annual day fees and Picnic fees, shows income,
 
 
 The Income & Expenses Excel workbook opens with a **Summary** sheet for the selected branch(es), financial year and month. Its Income → Fees collection section groups all receipts per student admission, with only student name and total amount received. A Branch column is included only for ALL-branches reports. School fees and event receipts remain separately detailed on the other workbook sheets. Repeated receipts for the same admission are summed; different students with the same name remain separate. Total collections reconciles with the report. The Expenses section shows total paid per expense head and Total expenses, followed by net surplus/deficit.
+
+
+In Students → Admissions, **Record payment** beside a student opens the existing collection dialog with that student selected. Choose School fees, Annual day fees or Picnic fees, enter the payment details and save. The app stays on Admissions; receipts, balances, financial reports and activity history use the same ledger as Fees & payments. Select a specific branch first. Teacher profiles cannot access Admissions or record collections.
