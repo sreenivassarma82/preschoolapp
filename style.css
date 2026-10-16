@@ -43,3 +43,5 @@
 .file-transfer-panel{border-left:4px solid #71bf1b;margin:12px 0}.file-transfer-panel[hidden]{display:none}.file-transfer-panel ol{padding-left:22px;margin:8px 0}.file-transfer-panel li{margin:8px 0;overflow-wrap:anywhere}.file-transfer-panel small{color:#56624d}
 
 #financialPnl .table-wrap{max-height:75vh;overflow:auto}#financialPnl .pnl-total th,#financialPnl .pnl-total td{font-weight:700;background:#f0f8e9}#financialPnl .pnl-net th,#financialPnl .pnl-net td{font-weight:800;background:#dfefcf;border-top:2px solid #519820}
+
+.admission-name.admission-complete{color:#23720c}.admission-name.admission-incomplete{color:#000}.admission-status{font-size:12px}.admission-status summary{cursor:pointer}.admission-status span{display:block;white-space:normal;min-width:160px;max-width:300px;margin-top:6px}
