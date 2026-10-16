@@ -277,3 +277,7 @@ Subscriptions is available under Admin > Expenses for every branch, with require
 
 ### Subscription subheads (r47)
 Select Subscriptions under Admin > Expenses, then choose Internet service provider or Google /domains. Narration remains required for provider/account/domain details. Internet provider is no longer a separate expense head. Existing Internet provider expenses, recoverable deleted expenses and deleted-branch expense snapshots migrate to Subscriptions > Internet service provider with IDs, payment dates, amounts, methods, references and narration preserved. Original subhead text is retained as legacySubscriptionSubhead and displayed on editing when different from narration. Previously recorded generic Subscription subheads remain viewable/editable as previous subheads. Excel retains the Subhead column; Home/P&L totals group these expenses under Subscriptions without duplicating them.
+
+
+### Admission colour exclusions (r48)
+Blood group and fee/discount details no longer affect admission-name completeness colours. Other contact number and both signature fields remain excluded. Other admission fields still determine green versus black. This changes the display rule only; admission saving and fee validation are unchanged.
