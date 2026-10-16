@@ -312,3 +312,10 @@ In Students → Admissions, select the academic year and a specific branch, then
 Use **Update cancellation / reinstate** to correct the date/reason or make the admission active again. The admission status filter offers ALL, Active and Cancelled. Changes synchronize with the shared ledger through the normal save process and are recorded in Activity history. Student data, photos, performance and collections remain intact. Cancellation does not automatically waive fees or refund collections; balances continue to include cancelled admissions.
 
 Home and Overview show active student counts and cancelled admission counts. Home period snapshots apply cancellations effective by the selected end date. Excel student reports include status, cancellation date and reason; filtered downloads respect the admission status filter. Carrying a student forward creates a new active admission for the next academic year. Teachers cannot cancel or reinstate admissions.
+
+
+## Monthly income and expense analysis
+
+Administrator → Admin → Income & Expenses provides month-wise branch reporting, with Financial year (April–March) and Month filters. Use the top Branch selector for one branch or ALL, including archived branches. Academic year and Class selectors are disabled on this report because cash payment dates determine the financial year/month across all admission cohorts.
+
+The report separates School fees, Annual day fees and Picnic fees, shows income, paid expenses and surplus/deficit for each month and branch, and includes monthly comparison graphs and expense-head analysis. Months with no transactions show zero. Download Excel exports the same selected branch, financial year and month, including monthly/branch totals, head analysis, individual collections, expenses and filter details. Unpaid fees are excluded; cancelled admissions retain their receipts. Payroll is included only when recorded in Expenses, matching the Home financial-year P&L. Teacher profiles cannot view or download this report.
