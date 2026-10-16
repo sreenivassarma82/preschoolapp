@@ -337,3 +337,6 @@ Student collections supports student search by name, admission number, parent or
 
 
 Admissions includes an **Admission information status** filter: ALL, Complete and Incomplete. It uses the same saved-record completeness rule as green/black names, including the either-parent-name rule. It combines with the existing Active/Cancelled admission status, branch/year/class, search and fee filters in individual-branch and ALL-branch lists. Filtered student Excel downloads honor it when screen filters are enabled; Back restores the selection. It does not filter other student modules.
+
+
+Progress-report PDF downloads always use one A4 page. The report title is centred, with the space below it reduced by half a text line compared with r62. The complete report is measured before drawing and uniformly fitted above the unchanged address footer, so subjects, observations, remarks and signatures are retained on the page. Longer reports use smaller print to fit. Excel report formatting is unchanged.
