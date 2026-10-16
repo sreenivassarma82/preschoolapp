@@ -42,9 +42,9 @@ const MonthlyFinance=(()=>{
  function summary(r){const grouped=new Map();for(const e of r.collections){const student=e.student,key=student?.id||e.studentId;if(!grouped.has(key))grouped.set(key,{name:student?[student.first,student.middle,student.surname].filter(Boolean).join(' '):'Student not available',branch:e.branch,year:student?.year||e.year||'',admission:student?.admission||'',school:0,annual:0,picnic:0});const row=grouped.get(key),field=e.head==='School fees'?'school':e.head==='Annual day fees'?'annual':'picnic';row[field]+=Math.round(e.amount*100);}
   const students=[...grouped.values()].sort((a,b)=>a.branch.localeCompare(b.branch)||a.name.localeCompare(b.name)||a.year.localeCompare(b.year)||a.admission.localeCompare(b.admission));return[
    ['Income & expenditure summary'],['Financial year',r.heads.label],['Month',r.month==='ALL'?'ALL months':r.month],['Branches',r.heads.branches.map(b=>b.name).join(', ')],['Currency',r.currency||''],[],
-   ['Income'],['Fees collection'],['Student name','Branch','Academic year','Admission number','School fees received','Annual day fees received','Picnic fees received','Total amount received'],
-   ...students.map(e=>[e.name,e.branch,e.year,e.admission,e.school/100,e.annual/100,e.picnic/100,(e.school+e.annual+e.picnic)/100]),
-   ['Total collections','','','',r.overall.school,r.overall.annual,r.overall.picnic,r.overall.income],[],
+   ['Income'],['Fees collection'],['Student name',...(r.branch==='ALL'?['Branch']:[]),'Amount received'],
+   ...students.map(e=>[e.name,...(r.branch==='ALL'?[e.branch]:[]),(e.school+e.annual+e.picnic)/100]),
+   ['Total collections',...(r.branch==='ALL'?['']:[]),r.overall.income],[],
    ['Expenses'],['Expense head','Total amount per head'],...r.heads.rows.filter(e=>e.kind==='expense'&&e.total!==0).map(e=>[e.label,e.total]),['Total expenses',r.overall.expenses],[],['Net surplus / (deficit)',r.overall.net]
   ];
  }
