@@ -281,3 +281,7 @@ Select Subscriptions under Admin > Expenses, then choose Internet service provid
 
 ### Admission colour exclusions (r48)
 Blood group and fee/discount details no longer affect admission-name completeness colours. Other contact number and both signature fields remain excluded. Other admission fields still determine green versus black. This changes the display rule only; admission saving and fee validation are unchanged.
+
+
+### Parent signatory dropdown (r49)
+In student admission forms, Parent signature / signed by is a dropdown with Father and Mother, displaying their entered names. Labels refresh when either parent name is edited. Saving stores the chosen role and the selected parent’s current full name; enter that parent’s name before selecting them. Leaving the selection blank is allowed. Existing free-text signature values are matched to a parent when unambiguous, or retained as a Previous value until explicitly changed/cleared. Student Excel exports include Parent signatory role and Parent signatory. Signature information remains excluded from admission completeness colours. This records the signatory’s identity, not a digital signature.
