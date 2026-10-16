@@ -269,3 +269,7 @@ Student admission forms have a Take photo button alongside Choose file and Paste
 
 ### Admission completeness colours (r45)
 Students > Admissions displays a green student name only when every admission data field is filled and applicable values are valid. Otherwise the name is explicitly black. Other contact number, parent signature and staff signature are excluded. The checks include branch, academic year, auto admission number, first/middle/surname, gender, admission date, DOB, blood group, class, annual discount, parents’ names, mobile, address, student photo and notes. A zero annual discount is a filled value. Completing information is a visual status rule; partial records may still be saved under the existing admission validation rules. The Admission status column says Complete or allows tapping Incomplete to read missing-field names. The status is computed from saved records, updates after saving and works in individual-branch and ALL-branch admission lists. Performance completion colours remain based on marks and are independent of admission completeness.
+
+
+### Subscriptions expense (r46)
+Subscriptions is available under Admin > Expenses for every branch, with required narration describing the subscription. Expense filters, Excel reports, Home totals and financial-year P&L include it.
