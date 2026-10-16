@@ -325,3 +325,6 @@ The Income & Expenses Excel workbook opens with a **Summary** sheet for the sele
 
 
 In Students → Admissions, **Record payment** beside a student opens the existing collection dialog with that student selected. Choose School fees, Annual day fees or Picnic fees, enter the payment details and save. The app stays on Admissions; receipts, balances, financial reports and activity history use the same ledger as Fees & payments. Select a specific branch first. Teacher profiles cannot access Admissions or record collections.
+
+
+The admission form shows the applicable annual fee from the master directly below Annual discount amount. It uses the selected branch, academic year and class, with the same branch-specific fee and year-default fallback as fee balances. The read-only amount is before discount and refreshes when the branch or class changes.
