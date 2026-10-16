@@ -328,3 +328,6 @@ In Students → Admissions, **Record payment** beside a student opens the existi
 
 
 The admission form shows the applicable annual fee from the master directly below Annual discount amount. It uses the selected branch, academic year and class, with the same branch-specific fee and year-default fallback as fee balances. The read-only amount is before discount and refreshes when the branch or class changes.
+
+
+Admission cancellation checks the ledger identity and saved record contents when checking for stale forms. Background activity-history uploads can change the storage revision without invalidating an open cancellation form. Actual record changes still require closing/reopening the form, and OneDrive ETag/local-folder conflict checks remain active during save.
