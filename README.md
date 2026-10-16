@@ -2,6 +2,8 @@
 
 A responsive browser application, ready for GitHub Pages. No build tools or dependencies are required. Use Chrome on Android, or Chrome/Edge on Windows.
 
+**Administrator login (r51):** the password is now shared through the connected ledger. On the original device, connect the ledger and sign in with the existing password (or use **Sync existing password**). Other devices load the same ledger and use that password. The earlier per-device/PIN setup notes below describe legacy versions.
+
 ## Included
 
 - Admissions for each academic year, using the supplied form: student's three-part name, blood group, parents, address, mobile, class, admission date, photo and parent/staff signatory names.
@@ -289,3 +291,15 @@ In student admission forms, Parent signature / signed by is a dropdown with Fath
 
 ### Search/filter Performance students (r50)
 Students > Performance includes a Search student field for names or admission numbers (case-insensitive, supporting multiple words) and a Marks status filter: All students, Marks complete, Marks pending, In progress or Not started. These combine with the selected branch, academic year, class and assessment/term. Admission numbers are visible in the roster. Clear search / status resets those two controls. Administrator ALL-branch Performance view and Teacher Performance view use the same search/status controls within their permitted scope. Back navigation retains search/status. Saving an assessment keeps its editor open; returning to the roster applies the filters to the updated marks. Administrator Excel exports apply search/status and selected assessment when the current-filter checkbox is checked; uncheck it to include the broader selected export scope.
+
+
+### Shared administrator password (r51)
+The Deepti Sarma password verifier is saved as adminAccess inside the shared ledger rather than treated as a separate password on every device. Only the salted PBKDF2-SHA256 verifier is shared; the plaintext password is never written to OneDrive, logs, exports or GitHub.
+
+One-time migration: use the device where the correct password was originally set. Connect/reload the intended shared ledger. If signed out, select Administrator login and enter the existing password; this links its existing verifier to the ledger after verification. If already signed in, select Sync existing password and verify that same password. No reset or replacement password is required. The app confirms shared synchronization only after the ledger save succeeds. A failed save retains the original local password for retry.
+
+On other devices, select Connect / reload ledger and open the same OneDrive file, then Administrator login. The shared verifier takes priority over an incorrect password previously configured on that browser. Fresh devices show existing-password login, not password creation, for a linked ledger. A populated older ledger that has not yet been linked directs users to the original device instead of asking each device to create another password.
+
+Connect / reload ledger is available before Administrator login, including Teacher view. If connection settings are not present, import the public connection-settings JSON from the original device or enter its Microsoft app/tenant/folder settings. New connection exports include the remembered folder/drive IDs where available; Microsoft permissions are still required. This transfers no administrator password or Microsoft token.
+
+JSON restores and record resets preserve the current shared administrator credential. Teacher edits cannot change it. Credential synchronization does not change admissions, payments, staff, expenses or performance records. App-level role restrictions continue to depend on browser/device and OneDrive access; this is not a separate server-enforced Microsoft identity. All devices must use the updated app and the same shared ledger.
