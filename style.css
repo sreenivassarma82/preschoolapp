@@ -45,3 +45,6 @@
 #financialPnl .table-wrap{max-height:75vh;overflow:auto}#financialPnl .pnl-total th,#financialPnl .pnl-total td{font-weight:700;background:#f0f8e9}#financialPnl .pnl-net th,#financialPnl .pnl-net td{font-weight:800;background:#dfefcf;border-top:2px solid #519820}
 
 .admission-name.admission-complete{color:#23720c}.admission-name.admission-incomplete{color:#000}.admission-status{font-size:12px}.admission-status summary{cursor:pointer}.admission-status span{display:block;white-space:normal;min-width:160px;max-width:300px;margin-top:6px}
+
+/* Fixed photo frame: same aspect ratio as the saved resize. */
+.student-photo-frame{width:200px;height:250px;max-width:100%;overflow:hidden;position:relative;background:#fff;border:1px solid #cbdcc3;margin:12px 0}.student-photo-frame .student-photo-preview{width:100%;height:100%;max-width:none;object-fit:contain;transform-origin:center;margin:0;border:0}.photo-adjust{max-width:380px}.photo-adjust label{display:block;margin:10px 0}.photo-adjust input[type=range]{width:100%;padding:0;min-height:36px}.photo-adjust output{font-weight:600;margin-left:8px}
