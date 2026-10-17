@@ -346,3 +346,12 @@ In Students → Student collections, clicking a student's name in collection his
 
 
 Administrator login and profile locking are available during background activity-only uploads. These uploads may set the general storage-busy flag but do not change student, performance or financial records. The commit queue separately counts real record saves (including queued saves, credential updates, resets and log deletions); profile changes remain blocked until those complete. Shared password verification and OneDrive conflict protection are unchanged.
+
+
+## Administrator-first startup and remembered Microsoft connection
+
+On every app load/restart, Teacher mode and the previous administrator session are cleared for that tab and the app opens at Administrator login. The remembered OneDrive folder is reconnected automatically, including after disconnection in Teacher mode. Teacher remains an explicit choice after administrator authentication. The shared administrator password stays unchanged across devices.
+
+Microsoft's delegated refresh token is remembered in this browser's local storage, scoped to the configured Application ID and tenant; short-lived access tokens remain in session storage. Existing active Microsoft sessions are migrated when the updated app starts. Microsoft may require a fresh sign-in once after updating if the old browser session was already closed, or whenever consent/session access expires or is revoked. In that case the Administrator login screen stays visible and offers **Connect / sign in to remembered OneDrive**; the folder is retained. Changing Application ID or tenant clears the remembered Microsoft session. No token is included in connection settings, ledger backups, reports or activity logs.
+
+The Administrator login dialog opens immediately, including when the remembered OneDrive session is disconnected. Connection progress/errors appear in the dialog. Active record saves still prevent authentication/profile changes until completed; background log uploads do not. Microsoft/OneDrive HTTP requests and response bodies have a 45-second deadline on supported browsers, so failed connections can be retried. First-time password setup is offered only for a loaded empty shared ledger without an existing credential.
