@@ -1,5 +1,6 @@
 'use strict';
 function renderAllBranchesView(){
+ if(tab==='reports')return renderStudentReports();
  const titles={students:'Admissions',parents:'Parents & contacts',fees:'Fees & payments',reports:'Reports',performance:'Student performance',certificates:'Bonafide certificates',eventcollections:'Student collections',staff:'Staff administration',staffmaster:'Staff master',attendance:'Staff attendance',expenses:'Expenses',subjects:'Subjects per class',settings:'Year & fees'};
  if(!titles[tab])return null;
  const branchName=id=>data.branches.find(b=>b.id===id)?.name||'',ss=selected(),ids=new Set(ss.map(s=>s.id));
