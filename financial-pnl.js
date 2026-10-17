@@ -40,7 +40,7 @@ const MonthlyFinance=(()=>{
   return{year,month,branch,currency:d.currency,months:selected,heads,rows,totals,overall,monthly,collections,expenses};
  }
  function summary(r){const grouped=new Map();for(const e of r.collections){const student=e.student,key=student?.id||e.studentId;if(!grouped.has(key))grouped.set(key,{name:student?[student.first,student.middle,student.surname].filter(Boolean).join(' '):'Student not available',branch:e.branch,year:student?.year||e.year||'',admission:student?.admission||'',school:0,annual:0,picnic:0});const row=grouped.get(key),field=e.head==='School fees'?'school':e.head==='Annual day fees'?'annual':'picnic';row[field]+=Math.round(e.amount*100);}
-  const students=[...grouped.values()].sort((a,b)=>a.branch.localeCompare(b.branch)||a.name.localeCompare(b.name)||a.year.localeCompare(b.year)||a.admission.localeCompare(b.admission));return[
+  const students=[...grouped.values()].sort((a,b)=>a.name.trim().localeCompare(b.name.trim(),'en',{sensitivity:'base',numeric:true})||a.branch.localeCompare(b.branch)||a.year.localeCompare(b.year)||a.admission.localeCompare(b.admission));return[
    ['Income & expenditure summary'],['Financial year',r.heads.label],['Month',r.month==='ALL'?'ALL months':r.month],['Branches',r.heads.branches.map(b=>b.name).join(', ')],['Currency',r.currency||''],[],
    ['Income'],['Fees collection'],['Student name',...(r.branch==='ALL'?['Branch']:[]),'Amount received'],
    ...students.map(e=>[e.name,...(r.branch==='ALL'?[e.branch]:[]),(e.school+e.annual+e.picnic)/100]),
