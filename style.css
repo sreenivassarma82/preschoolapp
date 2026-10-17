@@ -59,3 +59,5 @@
 
 /* Compact latest file transfer: status/filename, then details/time. */
 .file-transfer-panel{padding:6px 10px;font-size:12px;line-height:1.35;margin:8px 0}.file-transfer-panel ol{list-style:none;padding:0;margin:0}.file-transfer-panel li{margin:0;overflow:hidden}.file-transfer-panel li strong{font-weight:500}.file-transfer-panel li strong,.file-transfer-panel li>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.file-transfer-panel li strong{display:inline-block;max-width:100%;vertical-align:bottom}.file-transfer-panel li>span{display:inline-block;max-width:calc(100% - 100px);vertical-align:bottom}.file-transfer-panel small{white-space:nowrap;font-size:11px}.collection-save-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.collection-save-actions [role]{font-size:13px;overflow-wrap:anywhere}
+
+.collection-fee-details{border:1px solid #d8e6cd;background:#f7fbf4;padding:12px;border-radius:8px;margin:12px 0}.collection-fee-details h3{margin:0 0 10px}.collection-fee-details output{display:block;font-weight:600;padding:8px 0}
