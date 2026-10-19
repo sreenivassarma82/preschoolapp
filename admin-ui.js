@@ -47,7 +47,7 @@ function exportAdmin(){return openExcelExport('filtered','staff');}
 async function resetLedger(){
  if(OneDrive.enabled()&&!cloudLoaded)return notice('Connect and load the shared OneDrive ledger before resetting it.');
  const shared=OneDrive.enabled()||folder;
- if(!confirm((shared?'Delete ALL records and history from the connected shared ledger? Other devices must reload it.':'Delete ALL records and history saved in this browser? This does not change OneDrive.')+' This removes all branches, students, payments, staff, salaries, attendance, expenses, event collections and deleted records. Download a JSON backup first.'))return;
+ if(!confirm((shared?'Delete ALL records and history from the connected shared ledger? Other devices must reload it.':'Delete ALL records and history saved in this browser? This does not change OneDrive.')+' This removes all branches, students, payments, staff, salaries, attendance, expenses, event collections, other income and deleted records. Download a JSON backup first.'))return;
  if(prompt('Type RESET ALL to confirm permanent removal:')!=='RESET ALL')return;
  const n=initial();n.resetAt=new Date().toISOString();n.school=data.school;n.currency=data.currency;Admin.validate(n);Performance.normalize(n);
  if(await commit(n,{reset:true})){branchId=Admin.MAIN;branchEditing='';staffEditing='';year=Object.keys(data.years)[0];render();notice(shared?'Shared ledger reset. On every other device use Settings → Connect folder / reload cloud data (or Reload folder data). Old backups still contain the previous records.':'Browser ledger reset.');}
