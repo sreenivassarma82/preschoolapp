@@ -7,7 +7,7 @@ function buildFilteredExport(options){
  if(!bs.size||[...bs].some(id=>!data.branches.some(b=>b.id===id)))throw Error('Select at least one valid branch.');
  if(o.kind!=='staff'&&(!ys.size||[...ys].some(y=>!data.years[y])||(o.kind==='students'&&(!cs.size||[...cs].some(c=>!classes.includes(c))))))throw Error('Select at least one academic year and class.');
  if([...ms].some(m=>!/^\d{4}-(0[1-9]|1[0-2])$/.test(m)))throw Error('Select valid calendar months.');
- const monthOK=value=>!ms.size||ms.has(String(value||'').slice(0,7)),branchName=id=>data.branches.find(b=>b.id===id)?.name||'',period=ms.size?[...ms].sort().join(', '):'ALL months';
+ const monthOK=value=>!ms.size||ms.has(String(value||'').slice(0,7)),branchName=id=>Admin.branchLabel(data,id),period=ms.size?[...ms].sort().join(', '):'ALL months';
  const sheets={'Export filters':[['Filter','Selection'],['Report',o.kind==='staff'?'Staff, salaries & attendance':o.kind==='expenses'?'Branch expenses':'Students, fees & performance'],['Academic years',o.kind==='staff'?'Not applicable to staff master':[...ys].join(', ')],['Branches',[...bs].map(branchName).join(', ')],['Classes',o.kind!=='students'?'Branch-wide records':[...cs].join(', ')],['Calendar months',period],['Month scope',o.kind==='staff'?'Salary transactions and snapshots use salary month; attendance uses attendance date.':'Payments use payment date; performance uses report date. Student admission months apply only when selected.'],['Fee balances','Annual fees and due/credit use ALL saved regular-fee payments. Annual day and Picnic collections are excluded. Selected-month regular collections are shown separately.'],['Search / fee status',o.useScreenFilters&&o.kind==='students'&&tab!=='performance'?[search||'No search',statusFilter||'All fee statuses'].join(' / '):'Not applied']]};
  if(o.kind==='expenses'){
  const categories=new Set(o.expenseCategories||Expenses.categories);if(!categories.size||[...categories].some(c=>!Expenses.categories.includes(c)))throw Error('Select at least one valid expense category.');
@@ -18,7 +18,8 @@ function buildFilteredExport(options){
  return{sheets,expenses:records.length,total:cents(records.reduce((n,e)=>n+e.amount,0))};
  }
  if(o.kind==='staff'){
- const ss=data.staff.filter(s=>bs.has(s.branchId)),ids=new Set(ss.map(s=>s.id)),entries=data.staffEntries.filter(e=>ids.has(e.staffId)&&monthOK(e.month)),aa=data.attendance.filter(a=>ids.has(a.staffId)&&monthOK(a.date));
+ sheets['Export filters'].push(['Shared staff','Shown once for all selected branches; salary and attendance records are shared across branches.']);
+ const ss=data.staff.filter(s=>s.branchId===Admin.SHARED||bs.has(s.branchId)),ids=new Set(ss.map(s=>s.id)),entries=data.staffEntries.filter(e=>ids.has(e.staffId)&&monthOK(e.month)),aa=data.attendance.filter(a=>ids.has(a.staffId)&&monthOK(a.date));
  const salaryMonths=ms.size?[...ms].sort():[...new Set([salaryMonth,...data.staffEntries.filter(e=>ids.has(e.staffId)).map(e=>e.month),...data.salarySnapshots.filter(e=>ids.has(e.staffId)).map(e=>e.month)])].sort();
  sheets['Staff master']=[['Branch','Code','Name','Designation','Phone','Email','Address','Joining date','Status','Base salary','Bank / payment details','Notes','Staff type'],...ss.map(s=>[branchName(s.branchId),s.code,s.name,s.role,s.phone,s.email,s.address,s.joined,s.status,s.salary,s.bank,s.notes,Admin.staffType(s)])];
  sheets['Staff transactions']=[['Branch','Staff','Date','Salary month','Type','Amount','Reference','Notes'],...entries.map(e=>[branchName(e.branchId),data.staff.find(s=>s.id===e.staffId)?.name,e.date,e.month,e.type,e.amount,e.reference,e.notes])];

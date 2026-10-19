@@ -3,7 +3,7 @@ function renderAllBranchesView(){
  if(tab==='reports')return renderStudentReports();
  const titles={students:'Admissions',parents:'Parents & contacts',fees:'Fees & payments',reports:'Reports',performance:'Student performance',certificates:'Bonafide certificates',eventcollections:'Student collections',staff:'Staff administration',staffmaster:'Staff master',attendance:'Staff attendance',expenses:'Expenses',subjects:'Subjects per class',settings:'Year & fees'};
  if(!titles[tab])return null;
- const branchName=id=>data.branches.find(b=>b.id===id)?.name||'',ss=selected(),ids=new Set(ss.map(s=>s.id));
+ const branchName=id=>Admin.branchLabel(data,id),ss=selected(),ids=new Set(ss.map(s=>s.id));
  const grid=(headers,rr,students=null)=>'<div class="panel">'+table(headers,rr.map((row,index)=>'<tr '+(students?feeRowAttributes(students[index]):'')+'>'+row.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join(''))+'</div>';
  let html=heading(titles[tab],`ALL branches · ${esc(year)}`)+'<p class="setting-note">Viewing all branches, including archived branches. Select a specific branch to add, edit or delete records.</p>';
  if(['students','parents','fees','reports','certificates'].includes(tab))html+=filters();
