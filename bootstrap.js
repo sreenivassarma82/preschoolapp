@@ -9,6 +9,7 @@
   if(typeof window.submitAdmission!=='function'){feedback('The app files have not finished loading. Refresh online using the latest app link; your existing saved records are retained.');return;}
   try{return Promise.resolve(window.submitAdmission()).catch(window.ledgerShowFailure)}catch(error){window.ledgerShowFailure(error)}
  };
+ window.ledgerExpenseSaveClick=()=>{const node=element('expenseMessage');if(node){node.textContent='Checking expense…';node.hidden=false;}const show=error=>{const message='Expense not saved: '+(error?.message||String(error));if(node)node.textContent=message;else feedback(message);};if(typeof window.submitPaidExpense!=='function'){show('App files have not finished loading. Refresh online; your draft has not been saved.');return;}try{return Promise.resolve(window.submitPaidExpense()).catch(show)}catch(error){show(error)}};
  if(typeof window.addEventListener==='function'){
   window.addEventListener('error',event=>{if(event.target?.tagName==='SCRIPT')feedback('An app file could not be loaded. Refresh online using the latest app link.');else if(event.error)window.ledgerShowFailure(event.error);},true);
   window.addEventListener('unhandledrejection',event=>window.ledgerShowFailure(event.reason));
