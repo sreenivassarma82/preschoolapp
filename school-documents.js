@@ -12,10 +12,11 @@ const SchoolDocuments=(()=>{
  function possessive(s){return s.gender==='Male'?'his':s.gender==='Female'?'her':'';}
  function observationText(text,s){const pronoun=possessive(s);return pronoun?text.replace(/his\/her/gi,pronoun):text;}
  function details(s,options){if(!s.dob||!s.father?.trim()||!s.mother?.trim())throw Error('Update the student’s date of birth, father’s name and mother’s name in Admissions before creating this certificate.');return{student:studentName(s,true),possessive:possessive(s),father:s.father,mother:s.mother,class:s.class,year:s.year.replace(/[-–](\d{2})(\d{2})$/,'-$2'),dob:date(s.dob),issued:date(options.date),place:options.place.trim(),principal:options.principal.trim(),status:options.status==='was'?'was':'is'};}
+ function parentName(value,title){return title+' '+String(value).trim().replace(new RegExp('^'+title.replace('.','')+'\\.?\\s+','i'),'');}
  function body(d){return [
  'This is to certify that, '+d.student+'.',
- 'Father’s Name: '+d.father+'.',
- 'Mother’s Name: '+d.mother+'.',
+ 'Father’s Name: '+parentName(d.father,'Mr.')+'.',
+ 'Mother’s Name: '+parentName(d.mother,'Mrs.')+'.',
  d.status+' a Bonafide student of this preschool in '+d.class,
  'for the academic year '+d.year+'.',
  '', d.possessive[0].toUpperCase()+d.possessive.slice(1)+' date of birth as per school records is '+d.dob+'.',
