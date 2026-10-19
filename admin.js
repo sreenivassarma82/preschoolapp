@@ -2,7 +2,7 @@
 // Branch and staff data travel in the same versioned ledger as admissions.
 const Admin=(()=>{
  const MAIN='00000000-0000-4000-8000-000000000001';
- const staffTypes=['Faculty','Helper','Branch Head','Principal','Founder'];
+ const staffTypes=['Faculty','Helper','Branch Head','Principal','Director'];
  const statuses=['Present','Absent','Half day','Paid leave','Unpaid leave','Holiday','Weekly off'];
  const validId=s=>typeof s==='string'&&/^[0-9a-f-]{36}$/i.test(s);
  const round=n=>Math.round((n+Number.EPSILON)*100)/100;
@@ -11,7 +11,7 @@ const Admin=(()=>{
   if(!d||!Array.isArray(d.students))return;
   d.branches??=[{id:MAIN,code:'MAIN',name:'Select branch',address:'',phone:'',email:'',manager:'',notes:'',archived:false,fees:{}}];
   for(const b of d.branches)if(b.id===MAIN&&b.name==='Main branch')b.name='Select branch';
-  d.staff??=[];d.staffEntries??=[];d.attendance??=[];d.salarySnapshots??=[];
+  d.staff??=[];const renameFounder=s=>{if(s.type==='Founder')s.type='Director';if(String(s.role||'').trim().toLowerCase()==='founder')s.role='Director';};if(Array.isArray(d.staff))d.staff.forEach(renameFounder);for(const x of d.deletedRecords||[])if(x.kind==='branch'&&Array.isArray(x.staff))x.staff.forEach(renameFounder);d.staffEntries??=[];d.attendance??=[];d.salarySnapshots??=[];
   for(const s of d.students)s.branchId??=MAIN;
   for(const x of d.deletedRecords||[])if(x.kind==='student')x.student.branchId??=MAIN;
  }
@@ -28,7 +28,7 @@ const Admin=(()=>{
   const attendanceKeys=new Set();for(const a of d.attendance){const s=d.staff.find(s=>s.id===a.staffId),k=a.staffId+'|'+a.date;if(!validId(a.id)||!s||s.branchId!==a.branchId||attendanceKeys.has(k)||!dateOK(a.date)||!statuses.includes(a.status))throw Error('Invalid staff attendance');attendanceKeys.add(k);}
   for(const x of d.deletedRecords||[])if(x.kind==='branch'&&(!x.branch||!Array.isArray(x.students)||!Array.isArray(x.payments)||!Array.isArray(x.staff)||!Array.isArray(x.staffEntries)||!Array.isArray(x.attendance)))throw Error('Invalid deleted branch');
  }
- function staffType(staff){if(staffTypes.includes(staff?.type))return staff.type;const role=String(staff?.role||'').trim().toLowerCase();return ['teacher','faculty','teaching staff'].includes(role)?'Faculty':['helper','maid','support staff'].includes(role)?'Helper':['branch head','branch manager'].includes(role)?'Branch Head':role==='principal'?'Principal':role==='founder'?'Founder':'';}
+ function staffType(staff){if(staffTypes.includes(staff?.type))return staff.type;const role=String(staff?.role||'').trim().toLowerCase();return ['teacher','faculty','teaching staff'].includes(role)?'Faculty':['helper','maid','support staff'].includes(role)?'Helper':['branch head','branch manager'].includes(role)?'Branch Head':role==='principal'?'Principal':['founder','director'].includes(role)?'Director':'';}
  function nextStaffCode(d,branchId,allocate=false){const branch=d.branches.find(b=>b.id===branchId);if(!branch?.code?.trim())throw Error('Set the branch code before adding staff.');if(allocate&&branch.archived)throw Error('Unarchive the branch before adding staff.');const prefix=branch.code.trim().toUpperCase()+'-',saved=[...d.staff,...(d.deletedRecords||[]).flatMap(x=>x.kind==='branch'?(x.staff||[]):[])],used=new Set(saved.map(s=>String(s.code||'').trim().toUpperCase()));let number=branch.staffSequence||0;for(const code of used){if(code.startsWith(prefix)&&/^\d+$/.test(code.slice(prefix.length))){const n=Number(code.slice(prefix.length));if(!Number.isSafeInteger(n))throw Error('The existing staff code number is too large. Review this branch’s codes.');number=Math.max(number,n);}}let code;do{number++;if(!Number.isSafeInteger(number))throw Error('Staff code numbers are exhausted.');code=prefix+String(number).padStart(4,'0');}while(used.has(code));if(allocate)branch.staffSequence=number;return code;}
  function fees(d,s){return d.branches.find(b=>b.id===s.branchId)?.fees?.[s.year]||d.years[s.year].fees;}
  function payroll(d,s,month){const ee=d.staffEntries.filter(e=>e.staffId===s.id&&e.month===month),sum=t=>round(ee.filter(e=>e.type===t).reduce((a,e)=>a+e.amount,0));const base=s.salary,adjustment=sum('Salary adjustment'),deductions=sum('Deduction'),repayments=sum('Advance repayment'),paid=sum('Salary payment');return{base,adjustment,deductions,repayments,net:round(base+adjustment-deductions-repayments),paid,due:round(base+adjustment-deductions-repayments-paid),advanceBalance:round(d.staffEntries.filter(e=>e.staffId===s.id).reduce((n,e)=>n+(e.type==='Advance'?e.amount:e.type==='Advance repayment'?-e.amount:0),0))};}
