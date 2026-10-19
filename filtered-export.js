@@ -13,7 +13,7 @@ function buildFilteredExport(options){
  const categories=new Set(o.expenseCategories||Expenses.categories);if(!categories.size||[...categories].some(c=>!Expenses.categories.includes(c)))throw Error('Select at least one valid expense category.');
  const records=data.expenses.filter(e=>bs.has(e.branchId)&&ys.has(e.year)&&monthOK(e.date)&&categories.has(e.category)).sort((a,b)=>a.date.localeCompare(b.date));
  sheets['Export filters'].push(['Expense categories',[...categories].join(', ')]);sheets['Export filters'][6]=['Month scope','Date paid'];sheets['Export filters'][7]=['Amounts','Paid expenses only; linked Staff salary payments appear once; manual expenses remain separate.'];
- sheets.Expenses=[['Branch','Academic year','Date paid','Category','Subhead','Narration','Amount paid','Method','Reference'],...records.map(e=>[branchName(e.branchId),e.year,e.date,e.category,e.subhead,e.narration,e.amount,e.method,e.reference])];
+ sheets.Expenses=[['Branch','Academic year','Date paid','Category','Subhead','Narration','Amount paid','Method','Reference','Bill date'],...records.map(e=>[branchName(e.branchId),e.year,e.date,e.category,e.subhead,e.narration,e.amount,e.method,e.reference,e.billDate||''])];
  sheets['Expense summary']=[['Branch','Academic year','Category','Payment count','Amount paid'],...[...bs].flatMap(b=>[...ys].flatMap(y=>[...categories].map(c=>{const rr=records.filter(e=>e.branchId===b&&e.year===y&&e.category===c);return[branchName(b),y,c,rr.length,cents(rr.reduce((n,e)=>n+e.amount,0))]})))];
  return{sheets,expenses:records.length,total:cents(records.reduce((n,e)=>n+e.amount,0))};
  }
