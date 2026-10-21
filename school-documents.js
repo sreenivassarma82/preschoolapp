@@ -7,7 +7,7 @@ const SchoolDocuments=(()=>{
  ];
  function footerHTML(){return '<div class="school-addresses">'+addresses.map(a=>'<div>'+esc(a)+'</div>').join('')+'</div>';}
  function footerCanvas(ctx,width,height){ctx.font='13px Arial';ctx.fillStyle='#111';ctx.textAlign='left';addresses.forEach((a,i)=>ctx.fillText(a,70,height-80+i*20,width-140));}
- function date(value){if(!Admin.dateOK(value))throw Error('Enter a valid date.');return new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));}
+ function date(value){if(!Admin.dateOK(value))throw Error('Enter a valid date.');return displayDate(value);}
  function studentName(s,required=false){const title=s.gender==='Male'?'Mr.':s.gender==='Female'?'Miss.':'';if(required&&!title)throw Error('Select the student’s gender in Admissions before exporting a certificate or marksheet.');return (title?title+' ':'')+name(s);}
  function possessive(s){return s.gender==='Male'?'his':s.gender==='Female'?'her':'';}
  function observationText(text,s){const pronoun=possessive(s);return pronoun?text.replace(/his\/her/gi,pronoun):text;}

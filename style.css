@@ -67,3 +67,4 @@
 .fee-status-chip{display:inline-block;padding:6px 10px;border:1px solid currentColor;border-radius:6px;font-size:12px;margin:5px 0 10px}.fee-status-chip:not(.fee-not-collected):not(.fee-under-half):not(.fee-fully-paid){background:#fff;color:#52664d}
 
 .app-message-dialog{width:min(480px,94vw)}.app-message-dialog h2{font-size:20px}.app-message-text{white-space:pre-wrap;overflow-wrap:anywhere;color:#20351d}.app-message-dialog input{width:100%}
+.month-controls{display:inline-flex;gap:8px;align-items:center;max-width:100%}.month-controls select{min-width:100px;flex:1}.month-controls input[type=number]{width:7em;min-width:6em;flex:0 1 7em}
