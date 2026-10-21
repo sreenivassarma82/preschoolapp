@@ -65,3 +65,5 @@
 .fee-not-collected{background:#fde8e8;color:#8f2020}.fee-under-half{background:#fff0d9;color:#8a4900}.fee-fully-paid{background:#e5f5e6;color:#205c2a}tr.fee-not-collected>td,tr.fee-under-half>td,tr.fee-fully-paid>td{background:inherit}tr.fee-not-collected>td:first-child{box-shadow:inset 4px 0 #c43434}tr.fee-under-half>td:first-child{box-shadow:inset 4px 0 #df871b}tr.fee-fully-paid>td:first-child{box-shadow:inset 4px 0 #398848}.fee-collection-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px}.fee-collection-legend span{padding:5px 8px;border-radius:5px}
 
 .fee-status-chip{display:inline-block;padding:6px 10px;border:1px solid currentColor;border-radius:6px;font-size:12px;margin:5px 0 10px}.fee-status-chip:not(.fee-not-collected):not(.fee-under-half):not(.fee-fully-paid){background:#fff;color:#52664d}
+
+.app-message-dialog{width:min(480px,94vw)}.app-message-dialog h2{font-size:20px}.app-message-text{white-space:pre-wrap;overflow-wrap:anywhere;color:#20351d}.app-message-dialog input{width:100%}

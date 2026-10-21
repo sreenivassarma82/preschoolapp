@@ -22,9 +22,10 @@ function restoreNavigation(state){if(!state?.ledgerNavigation)return;navigationR
  }finally{navigationRestoring=false;}}
 if(typeof window.addEventListener==='function')window.addEventListener('popstate',event=>restoreNavigation(event.state));
 
-function exitApp(){
+async function exitApp(){
  if(busy||admissionSaving){notice('A save is in progress. Please wait before closing the app.');return;}
- if(!confirm('Close Little Wings Preschool? Unsaved form changes will be lost.'))return;
+ if(!await AppDialogs.confirm('Close Little Wings Preschool? Unsaved form changes will be lost.'))return;
+ if(busy||admissionSaving){notice('A save is in progress. Please wait before closing the app.');return;}
  const message=$('#exitAppMessage');
  try{window.close();}catch{}
  setTimeout(()=>{if(!message)return;const agent=globalThis.navigator?.userAgent||'';message.textContent=/Android/i.test(agent)?'To close: open Recent apps and swipe Little Wings Preschool away, or close this browser tab.':/Windows/i.test(agent)?'To close: press Alt + F4, or close this browser tab.':'To close: use your device’s app switcher or close this browser tab.';message.hidden=false;},300);
