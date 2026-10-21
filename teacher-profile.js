@@ -13,7 +13,7 @@ const TeacherProfile=(()=>{
  function rememberAdmin(){const c=savedPassword();if(c)try{localStorage.setItem(REMEMBER,JSON.stringify({datasetId:data.datasetId,hash:c.hash,salt:c.salt}));}catch{}}
  function rememberedAdmin(){const c=savedPassword(),r=parse(REMEMBER);return !!c&&!!r&&r.datasetId===data.datasetId&&r.hash===c.hash&&r.salt===c.salt;}
  function ready(){return OneDrive.enabled()?cloudLoaded:!!folder;}
- const emptyLedger=d=>!['students','payments','staff','staffEntries','attendance','expenses','eventCollections','otherIncomes','performance'].some(k=>d[k]?.length);
+ const emptyLedger=d=>!['students','payments','staff','staffEntries','attendance','expenses','eventCollections','otherIncomes','financeItems','performance'].some(k=>d[k]?.length);
  if(new URLSearchParams(location.search).get('profile')==='teacher'){localStorage.setItem(ROLE,'teacher');sessionStorage.removeItem(SESSION);localStorage.removeItem(REMEMBER);const query=new URLSearchParams(location.search);query.delete('profile');const remaining=query.toString();history.replaceState(history.state||null,'',location.pathname+(remaining?'?'+remaining:'')+location.hash);}
  async function digest(value){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))).map(x=>x.toString(16).padStart(2,'0')).join('');}
  async function passwordHash(password,salt){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);return Array.from(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:210000,hash:'SHA-256'},key,256))).map(x=>x.toString(16).padStart(2,'0')).join('');}
