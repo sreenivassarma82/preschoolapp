@@ -34,3 +34,9 @@ const TeacherProfile=(()=>{
  if(typeof window.addEventListener==='function')window.addEventListener('storage',e=>{if([ROLE,'little-ledger-v1'].includes(e.key))render();});
  return{teacher,atLogin,beginStartup,startup,switchProfile,refresh,check,setPassword,authenticate,passwordHash,validateAccess,prepareCommit,connectLedger};
 })();
+
+### OneDrive photos and faster saves (r105)
+
+Student photos are stored once in immutable `preschool-photo-*.json` bundles beside `preschool-records.json`. The first save prepares existing photos; subsequent collections upload the smaller ledger and only new photos. Keep the whole folder together when moving or restoring cloud files. Refresh all devices to r105 or later before continuing; older versions cannot read separated photo references. Browser recovery copies and downloaded JSON backups still contain the complete photos. Missing photo bundles stop cloud loading with a visible error rather than discarding photos.
+
+Automatic activity-only OneDrive uploads are deferred. Pending activities remain on the device and synchronize with the next record save or the explicit Sync pending activity button in Activity history.

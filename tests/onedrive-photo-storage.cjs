@@ -1,0 +1,29 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),{webcrypto}=require('crypto');
+const photo='data:image/jpeg;base64,'+'A'.repeat(30000),newPhoto='data:image/png;base64,'+'B'.repeat(20000);
+let ledger={schema:1,datasetId:'test',revision:'r1',logGeneration:'legacy',activities:[],students:[{id:'s1',photo},{id:'s2',photo}],deletedRecords:[{student:{photo}}]},version=1,photoWrites=0,recordWrites=0,failed=false;const bundles=new Map(),sizes=[],sessions=new Map();let chunkCount=0;
+const response=(body,status=200)=>({ok:status>=200&&status<300,status,json:async()=>structuredClone(body)});
+function client(){const mem=()=>{const m=new Map();return{getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,v),removeItem:k=>m.delete(k)}};const localStorage=mem(),sessionStorage=mem();localStorage.setItem('ledger-onedrive-config',JSON.stringify({clientId:'x',tenant:'common',path:'Records',enabled:true}));sessionStorage.setItem('ledger-onedrive-token',JSON.stringify({access_token:'token',expires_at:Date.now()+3600000}));const x={crypto:webcrypto,localStorage,sessionStorage,structuredClone,URL,URLSearchParams,TextEncoder,Date,console,location:{origin:'https://example.test',pathname:'/'},History:{visible:(d,...lists)=>[...new Map(lists.flat().map(e=>[e.id,e])).values()]},fetch:async(url,o={})=>{
+ if(url==='https://download.test/ledger')return response(ledger);
+ if(url.startsWith('https://download.test/preschool-photo-'))return bundles.has(url.split('/').at(-1))?response(bundles.get(url.split('/').at(-1))):response({},404);
+ const file=url.match(/preschool-photo-[a-f0-9-]+\.json/)?.[0];
+ if(file&&url.endsWith('/createUploadSession')){sessions.set(file,[]);return response({uploadUrl:'https://upload.test/'+file});}
+ if(url.startsWith('https://upload.test/')){const file=url.split('/').at(-1),parts=sessions.get(file);chunkCount++;const range=o.headers['Content-Range'].match(/bytes (\d+)-(\d+)\/(\d+)/);assert.equal(Number(range[1]),parts.reduce((n,p)=>n+p.length,0));parts.push(Buffer.from(o.body));if(Number(range[2])+1===Number(range[3])){bundles.set(file,JSON.parse(Buffer.concat(parts).toString()));return response({id:file});}return response({nextExpectedRanges:[String(Number(range[2])+1)+'-']},202);}
+ if(file){if(o.method==='PUT'){photoWrites++;if(failed)return response({},503);bundles.set(file,JSON.parse(o.body));return response({id:file,eTag:'photo'});}return bundles.has(file)?response({'@microsoft.graph.downloadUrl':'https://download.test/'+file}):response({},404);}
+ if(url.endsWith('/records/content')){recordWrites++;if(o.headers['If-Match']!=='e'+version)return response({},412);sizes.push(o.body.length);ledger=JSON.parse(o.body);version++;return response({id:'records',eTag:'e'+version});}
+ if(url.includes('preschool-records.json'))return response({id:'records',eTag:'e'+version,'@microsoft.graph.downloadUrl':'https://download.test/ledger'});
+ return response({id:'folder',folder:{}});
+ }};vm.createContext(x);vm.runInContext(fs.readFileSync(require('path').join(__dirname,'..','cloud.js'),'utf8'),x);return{run:s=>vm.runInContext(s,x),x};}
+(async()=>{const a=client();a.x.draft=await a.run('OneDrive.read()');a.x.draft.revision='r2';await a.run('OneDrive.write(draft,"r1")');assert.equal(photoWrites,1);assert.equal(recordWrites,1);assert.equal(ledger.schema,2);assert.equal(a.x.draft.schema,1);assert(sizes[0]<1500);assert(ledger.students[0].photo.oneDrivePhoto);assert.equal(a.x.draft.students[0].photo,photo);assert.equal(a.x.draft.deletedRecords[0].student.photo,photo);
+// Next collection save sends no photo again, including duplicate and deleted-record images.
+a.x.draft.revision='r3';a.x.draft.payments=[{id:'p1',amount:100}];await a.run('OneDrive.write(draft,"r2")');assert.equal(photoWrites,1);assert(sizes[1]<1600);
+// Another device fully reconstructs photos and reuses the immutable bundle on its first save.
+const b=client();b.x.draft=await b.run('OneDrive.read()');assert.equal(b.x.draft.schema,1);assert.equal(b.x.draft.photoStorage,undefined);assert.equal(b.x.draft.students[0].photo,photo);assert.equal(b.x.draft.deletedRecords[0].student.photo,photo);b.x.draft.revision='r4';await b.run('OneDrive.write(draft,"r3")');assert.equal(photoWrites,1);
+// Only a changed photo creates another bundle. Existing backups stay hydrated.
+b.x.draft.students[0].photo=newPhoto;b.x.draft.revision='r5';await b.run('OneDrive.write(draft,"r4")');assert.equal(photoWrites,2);assert.equal(bundles.size,2);assert.equal(b.x.draft.students[1].photo,photo);
+// Failed photo upload never replaces the shared ledger; retry can safely complete it.
+const before=JSON.stringify(ledger);b.x.draft.students[0].photo='data:image/webp;base64,CCC';b.x.draft.revision='r6';failed=true;await assert.rejects(b.run('OneDrive.write(draft,"r5")'));assert.equal(JSON.stringify(ledger),before);failed=false;await b.run('OneDrive.write(draft,"r5")');assert.equal(ledger.revision,'r6');
+// Large one-time migrations use bounded chunks, not a single oversized upload.
+b.x.draft.students[0].photo='data:image/jpeg;base64,'+'D'.repeat(3300000);b.x.draft.revision='r7';await b.run('OneDrive.write(draft,"r6")');assert.equal(chunkCount,3);const c=client();const hydrated=await c.run('OneDrive.read()');assert.equal(hydrated.students[0].photo,b.x.draft.students[0].photo);assert(sizes.at(-1)<1600);
+// Missing bundle fails loading explicitly, preventing silent photo loss.
+const file=ledger.students[0].photo.oneDrivePhoto.file;bundles.delete(file);await assert.rejects(client().run('OneDrive.read()'),/photo bundle/);
+console.log('PASS: one-time photo separation, small collection payloads, cross-device hydration, deleted record photos, changed-photo upload, rollback, retry and missing-photo protection');})().catch(e=>{console.error(e);process.exitCode=1});
