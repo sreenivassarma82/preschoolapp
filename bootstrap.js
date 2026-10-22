@@ -1,4 +1,8 @@
 'use strict';
+// Exact in-session identities avoid repeatedly serializing image bytes for comparisons.
+// Images are still written in full to backups; these tokens are never persisted.
+const LedgerPhotoIdentity=(()=>{const ids=new Map();return value=>{if(!ids.has(value))ids.set(value,ids.size+1);return ids.get(value);};})();
+
 // Feedback is independent of the ledger modules, so a script failure is visible.
 (()=>{
  const element=id=>document.querySelector('#'+id);
