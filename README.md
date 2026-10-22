@@ -40,3 +40,11 @@ const TeacherProfile=(()=>{
 Student photos are stored once in immutable `preschool-photo-*.json` bundles beside `preschool-records.json`. The first save prepares existing photos; subsequent collections upload the smaller ledger and only new photos. Keep the whole folder together when moving or restoring cloud files. Refresh all devices to r105 or later before continuing; older versions cannot read separated photo references. Browser recovery copies and downloaded JSON backups still contain the complete photos. Missing photo bundles stop cloud loading with a visible error rather than discarding photos.
 
 Automatic activity-only OneDrive uploads are deferred. Pending activities remain on the device and synchronize with the next record save or the explicit Sync pending activity button in Activity history.
+
+### Incremental OneDrive storage (r106)
+
+The OneDrive root `preschool-records.json` is now a small atomic index. Records are divided into immutable `preschool-part-*.json` files. Only changed groups are uploaded; a collection typically updates one payment group and one activity group, followed by a conditional index save. Settings changes update the index. Unchanged admissions, staff, attendance and earlier history groups are reused.
+
+The first save converts existing storage once and may take longer. Refresh every device to r106 or later before using the shared folder; earlier builds cannot read the new index format. Keep the entire OneDrive ledger folder together, including all `preschool-part-*` and `preschool-photo-*` files. Do not delete these files manually. Use the app's Download JSON backup to obtain a complete, portable ledger; the root index alone is not a backup. Folder/browser storage and Excel exports remain self-contained.
+
+Parts are staged before the root index is changed. The root uses If-Match, so a failed upload never exposes a partially updated ledger and another device's changes cannot be overwritten silently. Interrupted index saves are checked before retrying. Old unreferenced parts are retained for safety; this release does not automatically delete them.
