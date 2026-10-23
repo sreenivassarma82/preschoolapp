@@ -3,6 +3,11 @@
 // Images are still written in full to backups; these tokens are never persisted.
 const LedgerPhotoIdentity=(()=>{const ids=new Map();return value=>{if(!ids.has(value))ids.set(value,ids.size+1);return ids.get(value);};})();
 
+const SchoolYear=(()=>{
+ function range(start){if(!Number.isInteger(start)||start<2000||start>2198)throw Error('Select a valid year.');return{start:start+'-04-01',end:(start+1)+'-03-31',label:start+'–'+(start+1)};}
+ function academic(value){const m=/^(\d{4})\s*[-–/]\s*(\d{2}|\d{4})$/.exec(String(value||''));if(!m)return null;const start=Number(m[1]),end=m[2].length===2?(Number(m[2])===((start+1)%100)?start+1:NaN):Number(m[2]);if(end!==start+1||start<2000||start>2198)return null;return range(start);}
+ return{range,academic};
+})();
 // Feedback is independent of the ledger modules, so a script failure is visible.
 (()=>{
  const element=id=>document.querySelector('#'+id);
