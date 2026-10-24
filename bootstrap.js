@@ -8,6 +8,17 @@ const SchoolYear=(()=>{
  function academic(value){const m=/^(\d{4})\s*[-–/]\s*(\d{2}|\d{4})$/.exec(String(value||''));if(!m)return null;const start=Number(m[1]),end=m[2].length===2?(Number(m[2])===((start+1)%100)?start+1:NaN):Number(m[2]);if(end!==start+1||start<2000||start>2198)return null;return range(start);}
  return{range,academic};
 })();
+// Visible action feedback supplements inline messages without claiming unfinished work succeeded.
+window.AppNotifications=(()=>{
+ let timer;
+ function show(message,kind='info'){if(!message||!document.createElement||!document.body)return;let box=document.querySelector('#appToast');if(!box){box=document.createElement('div');box.id='appToast';box.className='app-toast';box.setAttribute('role','status');box.setAttribute('aria-live','polite');box.setAttribute('aria-atomic','true');document.body.append(box);}const dialog=document.querySelector('dialog[open]'),host=dialog||document.body;if(box.parentElement!==host)host.append(box);box.textContent=String(message);box.dataset.kind=kind;box.hidden=false;Promise.resolve().then(()=>{if(box.hidden||document.querySelector('#appToast')!==box)return;const host=document.querySelector('dialog[open]')||document.body;if(box.parentElement!==host)host.append(box);});if(timer)clearTimeout(timer);timer=setTimeout(()=>{box.hidden=true;},kind==='error'?12000:7000);}
+ function bind(){if(!document.addEventListener)return;document.addEventListener('click',event=>{const b=event.target?.closest?.('button,input[type="submit"],input[type="button"]');if(!b||b.disabled||b.closest('#appToast'))return;const label=(b.getAttribute('aria-label')||b.textContent||b.value||'Action').trim().replace(/\s+/g,' ');show(label.slice(0,160)+' selected.');},true);
+  document.addEventListener('invalid',event=>{const input=event.target;show(input?.validationMessage||'Please complete the required fields.','error');},true);
+  if(typeof MutationObserver==='function'&&document.body)new MutationObserver(records=>{let latest;for(const change of records){const node=change.target.nodeType===3?change.target.parentElement:change.target,field=node?.closest?.('[role="status"],#admissionNotice,#admissionFeedback');if(!field||field.isConnected===false||field.closest('#appToast')||field.id==='notice'||!/(Message|Notice|Feedback)$/.test(field.id||''))continue;const text=field.textContent?.trim();if(text)latest=text;}if(latest)show(latest,/(failed|not saved|unable|error|expired)/i.test(latest)?'error':'info');}).observe(document.body,{subtree:true,childList:true,characterData:true});
+ }
+ if(document.readyState==='loading'&&document.addEventListener)document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+ return{show};
+})();
 // Feedback is independent of the ledger modules, so a script failure is visible.
 (()=>{
  const element=id=>document.querySelector('#'+id);

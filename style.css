@@ -72,3 +72,5 @@
 .record-count{margin:0 0 .55rem;font-size:.9rem;color:#315838}.marksheet .record-count{display:none}
 
 .brand .app-tagline{font-size:12px;line-height:1.4;font-weight:400;color:#000;margin-top:-6px}
+
+.app-toast{position:fixed;z-index:100000;bottom:20px;right:16px;max-width:min(460px,calc(100vw - 32px));padding:14px 18px;background:#fff;color:#20351d;border:2px solid #347608;border-radius:10px;box-shadow:0 4px 20px #0003;font-size:14px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;pointer-events:none}.app-toast[data-kind="error"]{border-color:#b42318;color:#8d2017}.app-toast[hidden]{display:none}@media print{.app-toast{display:none!important}}
