@@ -70,3 +70,5 @@
 .month-controls{display:inline-flex;gap:8px;align-items:center;max-width:100%}.month-controls select{min-width:100px;flex:1}.month-controls input[type=number]{width:7em;min-width:6em;flex:0 1 7em}
 
 .record-count{margin:0 0 .55rem;font-size:.9rem;color:#315838}.marksheet .record-count{display:none}
+
+.brand .app-tagline{font-size:12px;line-height:1.4;font-weight:400;color:#52664d;margin-top:-6px}
