@@ -48,3 +48,10 @@ The OneDrive root `preschool-records.json` is now a small atomic index. Records 
 The first save converts existing storage once and may take longer. Refresh every device to r106 or later before using the shared folder; earlier builds cannot read the new index format. Keep the entire OneDrive ledger folder together, including all `preschool-part-*` and `preschool-photo-*` files. Do not delete these files manually. Use the app's Download JSON backup to obtain a complete, portable ledger; the root index alone is not a backup. Folder/browser storage and Excel exports remain self-contained.
 
 Parts are staged before the root index is changed. The root uses If-Match, so a failed upload never exposes a partially updated ledger and another device's changes cannot be overwritten silently. Interrupted index saves are checked before retrying. Old unreferenced parts are retained for safety; this release does not automatically delete them.
+
+
+### Named logins (r114)
+
+Startup offers Administrator (Deepti Sarma, using the existing password) or Teacher. Admin → Users & passwords grants access to active teaching staff from Staff master, changes access, resets passwords, and deletes login accounts without deleting staff records. Only enabled teachers are listed at sign-in. Teachers can view/edit Student Performance only. Both roles remain remembered on the device until signed out, subject to access or password changes and available browser storage. Teacher Login / Admin login signs out the current user before switching.
+
+Activity history captures the signed-in name, user ID and role when an action occurs, including queued events synchronized after a switch. Existing activity entries are preserved. Passwords are stored as salted PBKDF2 verifiers, never in audit text. Update all devices to this version to use named logins. These are app-level controls on a trusted device; direct OneDrive access remains governed by Microsoft folder sharing and requires a server for tamper-resistant field-level enforcement.

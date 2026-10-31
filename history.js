@@ -1,9 +1,9 @@
 'use strict';
 const History=(()=>{
  const KEY='ledger-activity-pending';let pending=[];try{pending=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(pending))pending=[];}catch{}
- const actor=()=>{const name=localStorage.getItem('ledger-operator-name')?.trim();const account=OneDrive.accountLabel();return account?(name?name+' ('+account+')':account):name||'Unnamed operator';};
+ const actor=()=>typeof UserAccess!=='undefined'?(UserAccess.identity()?.name||'Signed-out user'):'Signed-out user';
  const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(pending))}catch{}};
- function event(datasetId,action,subject='',details='',year='',outcome='Success'){return {id:crypto.randomUUID(),datasetId,logGeneration:typeof data!=='undefined'&&data?.datasetId===datasetId?(data.logGeneration||'legacy'):'legacy',at:new Date().toISOString(),actor:actor(),action,subject,details,year,outcome};}
+ function event(datasetId,action,subject='',details='',year='',outcome='Success'){return {id:crypto.randomUUID(),datasetId,logGeneration:typeof data!=='undefined'&&data?.datasetId===datasetId?(data.logGeneration||'legacy'):'legacy',at:new Date().toISOString(),actor:actor(),userId:typeof UserAccess!=='undefined'?UserAccess.identity()?.id||'':'',userRole:typeof UserAccess!=='undefined'?UserAccess.identity()?.role||'':'',action,subject,details,year,outcome};}
  function queue(e){pending.push(e);persist();}
  function merge(...lists){const seen=new Set();return lists.flat().filter(e=>{if(!e||seen.has(e.id))return false;seen.add(e.id);return true});}
  function synced(ids){const set=new Set(ids);pending=pending.filter(e=>!set.has(e.id));persist();}
@@ -25,3 +25,4 @@ const History=(()=>{
  }
  return{event,queue,merge,synced,moveSetup,changes,actor,normalize,validate,visible,prune,pending:dataset=>pending.filter(e=>!dataset||e.datasetId===dataset)};
 })();
+
