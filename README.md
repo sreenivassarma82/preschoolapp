@@ -61,3 +61,9 @@ Activity history captures the signed-in name, user ID and role when an action oc
 In Students → Student collections, select a branch and apply academic-year, class, student, month, collection-head or payment-method filters. Tick receipts individually or use the header checkbox to select all shown, then choose Delete selected. The confirmation lists the selected count, total amount and receipt details. The same controls and individual Delete buttons are available in a student's past-payment popup; that popup intentionally shows all dates for the selected admission. Changing the list filters clears selections. Teachers, ALL-branch views and archived branches cannot delete payments.
 
 School fees, Annual day and Picnic collections can be deleted together in one save. Dues and reports are recalculated, while admissions remain intact. Deleted receipts remain individually recoverable under Activity history → Deleted records. Failed saves retain the selection; retrying an unchanged deletion reuses its recovery IDs to recognize an earlier completed upload.
+
+### Login designations (r119)
+
+Login roles are Administrator, Director, Principal, Branch Head and Faculty. Staff name dropdowns show only active, enabled accounts of the selected designation. Helpers and other types cannot be granted login access. The administrator manages these accounts under Users & passwords.
+
+Deepti Sarma is the Director and existing Administrator. Selecting her under Director uses the same saved administrator password and management privileges. She is not offered as a duplicate staff login. Other granted staff accounts retain Student Performance permissions. Existing account/password data and the backward-compatible internal Teacher permission group are preserved; displayed designations and new audit roles come from Staff master. Refresh all devices to r119 to use the role-specific dropdowns.
