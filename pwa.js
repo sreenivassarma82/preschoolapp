@@ -1,41 +1,23 @@
 'use strict';
 (() => {
-  const install = document.getElementById('installApp');
-  const status = document.getElementById('pwaStatus');
-  let promptEvent = null;
-  const installed = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  const connection = () => {
-    status.textContent = navigator.onLine ? '' : 'Offline. OneDrive cloud saves need an internet connection.';
-    status.hidden = navigator.onLine;
-  };
-  connection();
-  window.addEventListener('online', connection);
-  window.addEventListener('offline', connection);
-  window.addEventListener('beforeinstallprompt', event => {
-    event.preventDefault();
-    if (installed()) return;
-    promptEvent = event;
-    install.hidden = false;
-  });
-  install.addEventListener('click', async () => {
-    if (!promptEvent) return;
-    install.disabled = true;
-    try {
-      await promptEvent.prompt();
-      await promptEvent.userChoice;
-    } catch (error) {
-      console.warn('Use the browser menu to install Little Wings Preschool.', error);
-    } finally {
-      promptEvent = null;
-      install.hidden = true;
-      install.disabled = false;
-    }
-  });
-  window.addEventListener('appinstalled', () => { promptEvent = null; install.hidden = true; });
-  if ('serviceWorker' in navigator && window.isSecureContext) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js', {scope: './',updateViaCache:'none'})
-        .catch(error => console.warn('App installation setup failed. Try refreshing online.', error));
-    });
-  }
+  const get=id=>document.getElementById(id),install=get('installApp'),status=get('pwaStatus');
+  const ua=navigator.userAgent||'',android=/Android/i.test(ua),samsung=/SamsungBrowser\//i.test(ua);
+  const chrome=/Chrome\//i.test(ua)&&!/(SamsungBrowser|EdgA|OPR|Firefox)\//i.test(ua);
+  const browser=samsung?'Samsung Internet':/EdgA\//.test(ua)?'Microsoft Edge':/Firefox\//.test(ua)?'Firefox':chrome?'Chrome':'Browser';
+  const root=new URL('./',location.href),guide=new URL('install.html',root);let promptEvent=null,confirmedInstalled=false;
+  const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const feedback=message=>{if(status){status.textContent=message;status.hidden=false;}const node=get('installHelpMessage');if(node)node.textContent=message;if(typeof AppNotifications!=='undefined')AppNotifications.show(message);};
+  const update=()=>{if(install){install.hidden=installed()||confirmedInstalled||(!android&&!promptEvent);install.textContent=samsung?'Install using Chrome':promptEvent?'Install app':'Installation help';}const retry=get('retryNativeInstall');if(retry){retry.hidden=!promptEvent||samsung||installed()||confirmedInstalled;retry.disabled=false;}};
+  const connection=()=>{if(!status)return;status.textContent=navigator.onLine?'':'Offline. OneDrive cloud saves and installation need an internet connection.';status.hidden=navigator.onLine;};
+  function setupGuide(){const details=get('installBrowserDetails');if(details)details.textContent='Detected browser: '+browser+(android?' · Android':'')+' · '+ua;const link=get('openChromeInstall');if(link){link.hidden=!android||chrome;link.href='intent://'+guide.host+guide.pathname+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(guide.href)+';end';}const copy=get('installGuideAddress');if(copy)copy.value=guide.href;const open=get('openBrowserApp');if(open)open.href=root.href;const message=get('installHelpMessage');if(message)message.textContent=samsung?'Use Open in Chrome below. Samsung Internet has a reported web-app installer issue matching the older-Android warning.':chrome?'Install from this Chrome page when Install app is available. If Android reports an older-version package, cancel that installation and update Chrome from Google Play before retrying.':'On Android, use an up-to-date Chrome browser to install. You can also continue using the app in your browser.';update();}
+  function showHelp(){setupGuide();const dialog=get('installHelpDialog');if(dialog?.showModal&&!dialog.open)dialog.showModal();}
+  async function requestInstall(){if(samsung||!promptEvent){showHelp();return;}const event=promptEvent;promptEvent=null;if(install)install.disabled=true;const retry=get('retryNativeInstall');if(retry)retry.disabled=true;try{await event.prompt();const choice=await event.userChoice;feedback(choice?.outcome==='accepted'?'Installation requested. Android will confirm whether it completes. If blocked, use the installation steps below.':'Installation cancelled. You can continue using the app in the browser.');}catch(error){feedback('The browser could not complete installation. Open Installation help or use the app in the browser.');showHelp();}finally{if(install)install.disabled=false;update();}}
+  connection();setupGuide();
+  window.addEventListener('online',connection);window.addEventListener('offline',connection);
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();if(installed()||confirmedInstalled)return;promptEvent=samsung?null:event;update();});
+  install?.addEventListener('click',requestInstall);get('retryNativeInstall')?.addEventListener('click',requestInstall);
+  get('closeInstallHelp')?.addEventListener('click',()=>get('installHelpDialog')?.close?.());
+  get('copyInstallGuide')?.addEventListener('click',async()=>{try{if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(guide.href);feedback('Installation link copied. Paste it into Chrome.');}catch{const input=get('installGuideAddress');input?.focus?.();input?.select?.();feedback('Long-press or select the installation link above to copy it, then paste it into Chrome.');}});
+  window.addEventListener('appinstalled',()=>{confirmedInstalled=true;promptEvent=null;update();feedback('The browser reports that Little Wings Preschool is installed.');});
+  window.addEventListener('load',()=>{if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).catch(()=>feedback('Offline setup could not finish. Keep using the browser and retry when online.'));if(new URL(location.href).searchParams.get('install')==='1')showHelp();});
 })();

@@ -67,3 +67,13 @@ School fees, Annual day and Picnic collections can be deleted together in one sa
 Login roles are Administrator, Director, Principal, Branch Head and Faculty. Staff name dropdowns show only active, enabled accounts of the selected designation. Helpers and other types cannot be granted login access. The administrator manages these accounts under Users & passwords.
 
 Deepti Sarma is the Director and existing Administrator. Selecting her under Director uses the same saved administrator password and management privileges. She is not offered as a duplicate staff login. Other granted staff accounts retain Student Performance permissions. Existing account/password data and the backward-compatible internal Teacher permission group are preserved; displayed designations and new audit roles come from Staff master. Refresh all devices to r119 to use the role-specific dropdowns.
+
+### Android installation recovery (r120)
+
+Use `install.html` for installation before signing into the ledger. It shares the existing manifest ID, start URL, service-worker scope and origin. No ledger, app credentials or Microsoft connection settings are reset. The main app provides Installation help when Android has not provided a native installation prompt.
+
+Samsung Internet is detected separately from its Chrome-engine user-agent token. The app button directs users to an explicit Chrome intent rather than requesting a Samsung-native package. The public installation link is stripped of OAuth query parameters and fragments. Browser details and a manual copy-link fallback support diagnosis. Installation prompt acceptance is not treated as successful installation; only the browser's `appinstalled` event reports completion.
+
+The installation page links to Chrome on Google Play and describes Chrome's `chrome://webapks` Update action for already-installed packages. Browser-only records require a JSON backup before switching browsers; OneDrive records stay in their configured folder. The page does not disable Play Protect, clear browser data, change app identity, supply an APK, or claim to set an Android target SDK through the web manifest. Android package generation/update remains controlled by the browser/provider and cannot be verified remotely on a user's phone.
+
+References: https://developers.google.com/android/play-protect/warning-dev-guidance ; https://chromium.googlesource.com/chromium/src/+/HEAD/components/webapps/docs/android_architecture.md ; https://web.dev/articles/manifest-updates ; reported Samsung issue https://github.com/SamsungInternet/support/issues/123 .

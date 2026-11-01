@@ -79,3 +79,5 @@
 .app-footer-brand{display:block;width:180px;max-width:100%;height:auto;object-fit:contain;background:#fff;margin-top:24px}
 
 .sidebar-footer{position:fixed;left:16px;bottom:max(12px,env(safe-area-inset-bottom));width:208px;z-index:15;padding:8px;background:#fff;border-radius:10px;box-shadow:0 3px 14px #20351d18}.sidebar-footer button{width:100%}.sidebar-footer .app-footer-brand{margin:10px auto 0}@media(min-width:751px){aside{padding-bottom:210px}}@media(max-width:750px){.sidebar-footer{left:12px;width:160px}main{padding-bottom:190px}}
+
+.installation-page{display:block}.installation-page main{max-width:720px;margin:0 auto;padding:24px 20px 40px}.installation-logo{display:block;width:180px;max-width:60%;height:auto;margin-bottom:18px}.install-guide-actions{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}.install-guide-link{display:inline-block;padding:10px 12px;border:1px solid #347608;border-radius:7px;color:#245507;font-weight:600}.install-browser-details{font-size:12px;overflow-wrap:anywhere}.install-guide-link[hidden]{display:none}#installHelpDialog{max-width:min(640px,calc(100vw - 24px));max-height:90dvh;overflow:auto}
