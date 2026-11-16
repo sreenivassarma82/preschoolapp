@@ -92,3 +92,7 @@ Student performance starts with Term I from April through December, and Term II 
 ### r123 — quarter-point marks
 
 New or edited performance marks and subject maxima use multiples of 0.25. Existing ledger records remain loadable without rounding or rewriting saved marks.
+
+### r124 — reset performance when switching users
+
+Sign-out and successful login clear the selected performance student, class/search/status filters and reset the assessment to its date-based default. Administrators still land on Home; opening Performance shows the roster. Navigation from a previous login cannot restore the previous user's form. Branch and academic-year selections remain available.
