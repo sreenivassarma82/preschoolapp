@@ -110,3 +110,7 @@ Each tab remembers its own class filter, with All classes on first entry (subjec
 Startup/login and remembered-ledger reload show a persistent status with stages, record/photo counts, elapsed seconds, readiness, or a retryable failure. Repeated connection/reload actions share ongoing operations. Photo bundles now use the existing bounded four-worker pool rather than serial downloads; all photos are still loaded and validated before the cloud ledger becomes ready. No storage-format changes.
 
 Validation: synthetic held requests verify progress, duplicate-read coalescing, error/recovery and no premature ready status; eight photo bundles load in two batches of four and reconstruct correctly. Actual Microsoft service timing depends on the account and service.
+
+### r127 — simpler connection status
+
+Connection status shows Loading (12s), then Ready to use (12s), with elapsed time frozen at completion. Technical stage/count details are omitted from this status. Connection errors use short plain-language messages; sign-in/reconnect prompts remain when access is required. Login and connection regression checks passed.
