@@ -84,3 +84,7 @@ References: https://developers.google.com/android/play-protect/warning-dev-guida
 Performance includes a class selector and class-name search. Signed-in staff can preview a saved assessment after all assessed marks are complete; observations and remarks remain optional. PDF/Excel download and marksheet printing are administrator-only. Staff browser printing shows a restriction notice; screenshots cannot be prevented.
 
 Validation: 66 runnable Node suites passed. Document suites requiring the unavailable original logo and visual browser checks could not run in this workspace.
+
+### r122 — default assessment term
+
+Student performance starts with Term I from April through December, and Term II from January through March, using the device date. Manual term selection remains available.
