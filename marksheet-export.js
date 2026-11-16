@@ -2,11 +2,12 @@
 const Marksheet=(()=>{
  const enc=new TextEncoder(),x=v=>String(v??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
  const logo='assets/little-wings-logo.jpg';
+ function requireAdministrator(){if(typeof TeacherProfile!=='undefined'&&(TeacherProfile.teacher()||TeacherProfile.atLogin()||typeof localStorage!=='undefined'&&localStorage.getItem('little-wings-device-profile')==='locked'))throw Error('Only the administrator can download or print marksheets.');}
  async function bytes(url){const r=await fetch(url);if(!r.ok)throw Error('Could not load the report logo. Refresh online and retry.');return new Uint8Array(await r.arrayBuffer());}
  function zip(files){const crc=b=>{let c=0xffffffff;for(const v of b){c^=v;for(let i=0;i<8;i++)c=(c>>>1)^((c&1)?0xedb88320:0)}return(c^0xffffffff)>>>0};let offset=0;const chunks=[],central=[];for(const [path,value] of Object.entries(files)){const name=enc.encode(path),body=typeof value==='string'?enc.encode(value):value,check=crc(body),h=new Uint8Array(30),v=new DataView(h.buffer);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint32(14,check,true);v.setUint32(18,body.length,true);v.setUint32(22,body.length,true);v.setUint16(26,name.length,true);chunks.push(h,name,body);const c=new Uint8Array(46),w=new DataView(c.buffer);w.setUint32(0,0x02014b50,true);w.setUint16(4,20,true);w.setUint16(6,20,true);w.setUint16(8,0x800,true);w.setUint32(16,check,true);w.setUint32(20,body.length,true);w.setUint32(24,body.length,true);w.setUint16(28,name.length,true);w.setUint32(42,offset,true);central.push(c,name);offset+=30+name.length+body.length;}const end=new Uint8Array(22),v=new DataView(end.buffer),size=central.reduce((a,b)=>a+b.length,0);v.setUint32(0,0x06054b50,true);v.setUint16(8,Object.keys(files).length,true);v.setUint16(10,Object.keys(files).length,true);v.setUint32(12,size,true);v.setUint32(16,offset,true);return new Blob([...chunks,...central,end]);}
  const image=url=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Could not load a report image.'));im.src=url;});
  async function photoBytes(url){const im=await image(url),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext('2d').drawImage(im,0,0);const blob=await new Promise(r=>c.toBlob(r,'image/png'));return new Uint8Array(await blob.arrayBuffer());}
- async function excel(p,s,b){
+ async function excel(p,s,b){requireAdministrator();
  const titledName=SchoolDocuments.studentName(s,true);
  const ns='http://schemas.openxmlformats.org/spreadsheetml/2006/main',rels='http://schemas.openxmlformats.org/package/2006/relationships',rows=new Map(),merges=[],heights=new Map();
  const set=(r,c,v,style=0)=>{if(!rows.has(r))rows.set(r,[]);rows.get(r).push({c,v,style});};const merge=(a)=>merges.push(a),col=c=>String.fromCharCode(65+c),title=(r,text,style=1)=>{set(r,0,text,style);merge(`A${r}:I${r}`);heights.set(r,22)};
@@ -34,11 +35,11 @@ const Marksheet=(()=>{
  'xl/drawings/drawing1.xml':`<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">${anchor(1,0,0,600,Math.round(600*694/1280),'Little Wings Preschool logo')}${photoAnchor}</xdr:wsDr>`,
  'xl/drawings/_rels/drawing1.xml.rels':`<Relationships xmlns="${rels}"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/logo.jpg"/>${photo?'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/photo.png"/>':''}</Relationships>`,
  'xl/media/logo.jpg':await bytes(logo)
- };if(photo)files['xl/media/photo.png']=photo;return zip(files);
+ };if(photo)files['xl/media/photo.png']=photo;requireAdministrator();return zip(files);
  }
  // Download a real PDF rather than relying on the device's print service.
  function jpegPDF(pages,width,height){const objects=[],add=body=>{objects.push(body);return objects.length;};add('<< /Type /Catalog /Pages 2 0 R >>');add('');const pageIds=[];for(const jpg of pages){const imageId=add([enc.encode(`<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpg.length} >>\nstream\n`),jpg,enc.encode('\nendstream')]);const content='q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ';const contentId=add(`<< /Length ${enc.encode(content).length} >>\nstream\n${content}\nendstream`);pageIds.push(add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 ${imageId} 0 R >> >> /Contents ${contentId} 0 R >>`));}objects[1]=`<< /Type /Pages /Count ${pageIds.length} /Kids [${pageIds.map(i=>i+' 0 R').join(' ')}] >>`;const chunks=[enc.encode('%PDF-1.4\n')],offsets=[0];let offset=chunks[0].length;objects.forEach((obj,i)=>{offsets.push(offset);const pieces=[enc.encode(`${i+1} 0 obj\n`),...(Array.isArray(obj)?obj:[enc.encode(obj)]),enc.encode('\nendobj\n')];for(const piece of pieces){chunks.push(piece);offset+=piece.length}});const xref=offset;chunks.push(enc.encode(`xref\n0 ${objects.length+1}\n0000000000 65535 f \n${offsets.slice(1).map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')}trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`));return new Blob(chunks,{type:'application/pdf'});}
- async function pdf(p,s,b){
+ async function pdf(p,s,b){requireAdministrator();
   const titledName=SchoolDocuments.studentName(s,true),logoIm=await image(logo),photo=s.photo?await image(s.photo):null,W=1240,H=1754,canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');if(!ctx)throw Error('PDF rendering is unavailable in this browser.');
   const margin=70,right=W-margin;let y=0,scale=1,drawing=false;const X=value=>(W-W*scale)/2+value*scale,Y=value=>20+(value-20)*scale;
   const text=(value,x,yy,size=19,bold=false,max=1100)=>{if(!drawing)return;ctx.font=`${bold?'bold ':''}${size*scale}px Arial`;ctx.fillStyle='#111';ctx.fillText(String(value??''),X(x),Y(yy),max*scale);};
@@ -64,8 +65,9 @@ const Marksheet=(()=>{
    y+=25;text('School Incharge: '+p.incharge,margin,y,18);y+=30;text('Signature: ___________________________',margin,y,18);text('Date: '+displayDate(p.date),right-260,y,18);return y+14;
   };
   const bottom=layout();scale=Math.min(1,(H-140-20)/(bottom-20));ctx.fillStyle='white';ctx.fillRect(0,0,W,H);drawing=true;layout();SchoolDocuments.footerCanvas(ctx,W,H);
-  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.96));if(!blob)throw Error('PDF rendering failed.');return jpegPDF([new Uint8Array(await blob.arrayBuffer())],W,H);
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.96));if(!blob)throw Error('PDF rendering failed.');const output=new Uint8Array(await blob.arrayBuffer());requireAdministrator();return jpegPDF([output],W,H);
  }
 
  return{excel,pdf,jpegPDF};
 })();
+

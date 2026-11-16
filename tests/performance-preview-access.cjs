@@ -1,0 +1,16 @@
+const outputPath=f=>require('path').join(process.env.TEST_OUTPUT_DIR||require('os').tmpdir(),f);
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),{webcrypto}=require('crypto');
+const mem=()=>{const m=new Map();return{getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)}};
+function setup(entrySearch='',existingStorage=null){const els=new Map();const el=s=>{if(!els.has(s))els.set(s,{textContent:'',innerHTML:'',value:'',events:{},addEventListener(k,f){this.events[k]=f},classList:{toggle(){}},scrollIntoView(){}});return els.get(s)};const x={console,crypto:webcrypto,Blob,TextEncoder,Uint8Array,DataView,URL,URLSearchParams,Intl,structuredClone,setTimeout:()=>1,localStorage:existingStorage||mem(),sessionStorage:mem(),location:{origin:'https://school.example',pathname:'/preschoolapp/',search:entrySearch,hash:'',protocol:'https:',hostname:'school.example',assign(v){this.assigned=v}},history:{replaceState(){}},btoa:s=>Buffer.from(s,'binary').toString('base64'),alert(){},confirm:()=>true,FormData:class{constructor(o){this.o=o}get(k){return this.o[k]}},document:{querySelector:el,querySelectorAll:()=>[],activeElement:null},indexedDB:{open(){throw Error('Unavailable')}}};x.window=x;vm.createContext(x);for(const f of ['bootstrap.js','cloud.js','history.js','excel.js','admin.js','admin-ui.js','expenses.js','event-collections.js','home-dashboard.js','financial-pnl.js','performance.js','performance-ui.js','marksheet-export.js','school-documents.js','navigation.js','admissions.js','filtered-export.js','student-photo.js','teacher-profile.js','all-branches.js','file-transfers.js','app.js'])vm.runInContext(fs.readFileSync(require('path').join(__dirname,'..',f),'utf8'),x);return{x,el,run:s=>vm.runInContext(s,x),submit:async(s,o)=>{Object.assign(el(s),o);return el(s).events.submit({preventDefault(){},target:o})}}}
+
+
+(async()=>{const {x,el,run}=setup();x.document.body={setAttribute(k,v){this[k]=v}};
+run("navigateTo('performance');render()");assert.match(el('#view').innerHTML,/id="performanceClass"/);
+assert.equal(run("staffMarksheetReady({date:'2026-10-16',term:'Term II',subjects:[{oral:10,written:0,assignment:0,marks:{oral:0}}]})"),true);
+assert.equal(run("staffMarksheetReady({date:'2026-10-16',term:'Term II',subjects:[{oral:10,written:0,assignment:0,marks:{oral:null}}]})"),false);
+require('./helpers/named-teacher.js')({run});run("localStorage.setItem('little-wings-device-profile','teacher');syncMarksheetPrintAccess()");assert.equal(run('marksheetAdminAccess()'),false);assert.equal(x.document.body['data-marksheet-access'],'staff');
+await assert.rejects(run('Marksheet.pdf({}, {}, {})'),/administrator/);await assert.rejects(run('Marksheet.excel({}, {}, {})'),/administrator/);
+assert.equal(await run("exportMarksheet('pdf')"),false);
+const css=fs.readFileSync(require('path').join(__dirname,'..','style.css'),'utf8');assert.match(css,/body\[data-marksheet-access="staff"\]>\*\{display:none!important/);
+console.log('PASS: class control, saved marks readiness, staff export guards and print restrictions');
+})().catch(e=>{console.error(e);process.exitCode=1});

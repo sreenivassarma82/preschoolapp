@@ -77,3 +77,10 @@ Samsung Internet is detected separately from its Chrome-engine user-agent token.
 The installation page links to Chrome on Google Play and describes Chrome's `chrome://webapks` Update action for already-installed packages. Browser-only records require a JSON backup before switching browsers; OneDrive records stay in their configured folder. The page does not disable Play Protect, clear browser data, change app identity, supply an APK, or claim to set an Android target SDK through the web manifest. Android package generation/update remains controlled by the browser/provider and cannot be verified remotely on a user's phone.
 
 References: https://developers.google.com/android/play-protect/warning-dev-guidance ; https://chromium.googlesource.com/chromium/src/+/HEAD/components/webapps/docs/android_architecture.md ; https://web.dev/articles/manifest-updates ; reported Samsung issue https://github.com/SamsungInternet/support/issues/123 .
+
+
+### r121 — performance class filters and staff preview
+
+Performance includes a class selector and class-name search. Signed-in staff can preview a saved assessment after all assessed marks are complete; observations and remarks remain optional. PDF/Excel download and marksheet printing are administrator-only. Staff browser printing shows a restriction notice; screenshots cannot be prevented.
+
+Validation: 66 runnable Node suites passed. Document suites requiring the unavailable original logo and visual browser checks could not run in this workspace.
