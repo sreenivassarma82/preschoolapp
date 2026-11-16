@@ -84,3 +84,5 @@
 
 
 #marksheetPreviewDialog{width:min(1000px,96vw);max-width:96vw;max-height:94dvh;overflow:auto}.marksheet-preview-header{display:flex;justify-content:space-between;align-items:center;gap:14px;position:sticky;top:0;background:white;z-index:1}.marksheet-preview-header h2{margin:0}#marksheetPreviewContent .marksheet{margin:16px auto}@media print{body[data-marksheet-access="staff"]>*{display:none!important}body[data-marksheet-access="staff"]::before{content:"Marksheet printing is available to the administrator only.";display:block!important;color:#000;background:#fff;font:14px Arial,sans-serif}}
+
+#appConnectionStatus{display:block;flex-basis:100%;font-size:.9rem;padding:7px 10px;border-left:3px solid #71bf1b;background:#f1fae8;color:#194216}#appConnectionStatus[data-state="loading"]{border-color:#b17800;background:#fff7df;color:#684800}#appConnectionStatus[data-state="error"]{border-color:#a92020;background:#fff0f0;color:#851a1a}

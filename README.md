@@ -104,3 +104,9 @@ Each tab remembers its own class selection. A class chosen in Performance no lon
 ### r125 — independent class filters
 
 Each tab remembers its own class filter, with All classes on first entry (subject masters retain a required class). Student Collections includes its own visible class selector, synchronized with the top class selector; Clear collection filters resets it to All classes. Branch and academic-year selectors remain shared. User switching clears remembered tab class filters. Validation: 66 runnable suites, including performance-to-collections isolation and collection class selection/clear.
+
+### r126 — connection progress and faster photo loading
+
+Startup/login and remembered-ledger reload show a persistent status with stages, record/photo counts, elapsed seconds, readiness, or a retryable failure. Repeated connection/reload actions share ongoing operations. Photo bundles now use the existing bounded four-worker pool rather than serial downloads; all photos are still loaded and validated before the cloud ledger becomes ready. No storage-format changes.
+
+Validation: synthetic held requests verify progress, duplicate-read coalescing, error/recovery and no premature ready status; eight photo bundles load in two batches of four and reconstruct correctly. Actual Microsoft service timing depends on the account and service.
