@@ -96,3 +96,11 @@ New or edited performance marks and subject maxima use multiples of 0.25. Existi
 ### r124 — reset performance when switching users
 
 Sign-out and successful login clear the selected performance student, class/search/status filters and reset the assessment to its date-based default. Administrators still land on Home; opening Performance shows the roster. Navigation from a previous login cannot restore the previous user's form. Branch and academic-year selections remain available.
+
+### r125 — independent class filters
+
+Each tab remembers its own class selection. A class chosen in Performance no longer narrows Student Collections or Admissions. Collections includes a visible Class selector and Clear resets it to ALL classes. Branch and academic year remain top-level selectors. Filters and reports use the active tab’s class.
+
+### r125 — independent class filters
+
+Each tab remembers its own class filter, with All classes on first entry (subject masters retain a required class). Student Collections includes its own visible class selector, synchronized with the top class selector; Clear collection filters resets it to All classes. Branch and academic-year selectors remain shared. User switching clears remembered tab class filters. Validation: 66 runnable suites, including performance-to-collections isolation and collection class selection/clear.
