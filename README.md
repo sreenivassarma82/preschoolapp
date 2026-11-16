@@ -88,3 +88,7 @@ Validation: 66 runnable Node suites passed. Document suites requiring the unavai
 ### r122 — default assessment term
 
 Student performance starts with Term I from April through December, and Term II from January through March, using the device date. Manual term selection remains available.
+
+### r123 — quarter-point marks
+
+New or edited performance marks and subject maxima use multiples of 0.25. Existing ledger records remain loadable without rounding or rewriting saved marks.

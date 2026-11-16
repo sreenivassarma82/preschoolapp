@@ -6,12 +6,12 @@ vm.createContext(sandbox);vm.runInContext(fs.readFileSync(require('path').join(_
 async function dispatch(url,mode='cors',method='GET'){let promise;handlers.fetch({request:{url,mode,method},respondWith:p=>promise=p});return promise?await promise:null;}
 (async()=>{let life;handlers.install({waitUntil:p=>life=p});await life;handlers.activate({waitUntil:p=>life=p});await life;assert.equal(deleted.length,1);assert(!deleted.includes('unrelated-cache'));
  await dispatch(scope+'app.js');assert(puts.includes(scope+'app.js'));
- await dispatch(scope+'app.js?v=r122');assert.equal(puts.at(-1),scope+'app.js');const count=puts.length;await dispatch(scope+'?code=secret&state=test','navigate');assert.equal(puts.length,count);
+ await dispatch(scope+'app.js?v=r123');assert.equal(puts.at(-1),scope+'app.js');const count=puts.length;await dispatch(scope+'?code=secret&state=test','navigate');assert.equal(puts.length,count);
  assert.equal(await dispatch('https://graph.microsoft.com/v1.0/me/drive'),null);
  assert.equal(await dispatch(scope+'preschool-records.json'),null);
  assert.equal(await dispatch(scope+'app.js?token=secret'),null);
  assert.equal(await dispatch(scope+'app.js','cors','POST'),null);
- online=false;assert.equal(await dispatch(scope+'app.js?v=r122'),cached);assert.equal(await dispatch(scope,'navigate'),cached);assert.equal(await dispatch(scope+'style.css'),cached);assert.equal(await dispatch(scope+'install.html','navigate'),cached);assert.equal(lastMatch,scope+'install.html');
+ online=false;assert.equal(await dispatch(scope+'app.js?v=r123'),cached);assert.equal(await dispatch(scope,'navigate'),cached);assert.equal(await dispatch(scope+'style.css'),cached);assert.equal(await dispatch(scope+'install.html','navigate'),cached);assert.equal(lastMatch,scope+'install.html');
  // Simulate the install prompt lifecycle without a browser.
  const events={},button={hidden:true,disabled:false,addEventListener:(k,f)=>events.click=f},status={hidden:true,textContent:''};let registered,prompted=false;
  const ui={console,URL,location:{href:scope},document:{getElementById:id=>id==='installApp'?button:id==='pwaStatus'?status:null},navigator:{onLine:true,serviceWorker:{register:async(...a)=>registered=a}},window:{isSecureContext:true,matchMedia:()=>({matches:false}),addEventListener:(k,f)=>events[k]=f}};
