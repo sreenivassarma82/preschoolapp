@@ -114,3 +114,9 @@ Validation: synthetic held requests verify progress, duplicate-read coalescing, 
 ### r127 — simpler connection status
 
 Connection status shows Loading (12s), then Ready to use (12s), with elapsed time frozen at completion. Technical stage/count details are omitted from this status. Connection errors use short plain-language messages; sign-in/reconnect prompts remain when access is required. Login and connection regression checks passed.
+
+### r128 — faster repeat startup
+
+An IndexedDB device cache retains immutable record parts and photo bundles across app restarts. Each connection still authenticates and downloads the current OneDrive index before reconstructing and validating the ledger; changed references are downloaded and obsolete cache files for that scope are removed. Cache entries are isolated by Microsoft app, tenant, drive and folder. Unavailable/over-quota storage falls back to downloading. Cached data never bypasses a failed cloud access check. The remembered-folder path avoids an extra folder lookup; a missing ledger still checks the folder to distinguish missing access.
+
+Ten seconds is the target for repeat startup, not a guaranteed deadline or a timer that marks incomplete data ready. The first successful load populates the cache and can take longer. The Loading / Ready to use status and bracketed time are retained. Synthetic tests verify zero part/photo downloads on an unchanged restart, one changed-part download after a new index, scope isolation, rejected access and cache failure recovery. Live Microsoft timings have not been measured here.
