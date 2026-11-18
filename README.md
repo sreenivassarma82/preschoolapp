@@ -124,3 +124,7 @@ Ten seconds is the target for repeat startup, not a guaranteed deadline or a tim
 ### r129 — Juveli rent subhead spelling
 
 The standard Juveli rent subhead is Juveli shop 7&8. Normalization corrects the old standard spelling in saved and deleted expenses, including the historical combined electricity subhead, while preserving record IDs, amounts and custom master items.
+
+### r130 — Nursery and Playgroup subjects
+
+Hindi is excluded from default and existing effective subject setups for Nursery and Playgroup across branches and academic years. New assessments use the filtered setup. Junior and Senior KG retain Hindi. Saved assessments keep their original subject/maxima snapshots and marks. Saving a new Nursery/Playgroup setup with Hindi shows a clear validation message.
