@@ -6,7 +6,7 @@ const SchoolDocuments=(()=>{
  'Branch 3: Shop no 7 & 8, Shivshakti Greens Complex, Joveli, Near Kharvai Naka Badlapur East'
  ];
  function footerHTML(){return '<div class="school-addresses">'+addresses.map(a=>'<div>'+esc(a)+'</div>').join('')+'</div>';}
- function footerCanvas(ctx,width,height){ctx.font='13px Arial';ctx.fillStyle='#111';ctx.textAlign='left';addresses.forEach((a,i)=>ctx.fillText(a,70,height-80+i*20,width-140));}
+ function footerCanvas(ctx,width,height,fontSize=13){ctx.font=fontSize+'px Arial';ctx.fillStyle='#111';ctx.textAlign='left';addresses.forEach((a,i)=>ctx.fillText(a,70,height-80+i*20,width-140));}
  function date(value){if(!Admin.dateOK(value))throw Error('Enter a valid date.');return displayDate(value);}
  function studentName(s,required=false){const title=s.gender==='Male'?'Mr.':s.gender==='Female'?'Miss.':'';if(required&&!title)throw Error('Select the student’s gender in Admissions before exporting a certificate or marksheet.');return (title?title+' ':'')+name(s);}
  function possessive(s){return s.gender==='Male'?'his':s.gender==='Female'?'her':'';}
@@ -37,3 +37,4 @@ function bindCertificates(){
  $('#certificateStudent')?.addEventListener('change',e=>{certificateStudent=e.target.value;certificatePreview='';render()});
  $('#certificateForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.target),s=rows().find(s=>s.id===String(f.get('student')));try{if(!s)throw Error('Select a student in this branch and academic year.');certificateStudent=s.id;certificateOptions=Object.fromEntries(['date','place','principal','status'].map(k=>[k,String(f.get(k)||'')]));if(!certificateOptions.place.trim()||!certificateOptions.principal.trim())throw Error('Enter the place and principal name.');const d=SchoolDocuments.details(s,certificateOptions);certificatePreview=SchoolDocuments.preview(d);if(e.submitter?.value==='pdf'){const button=e.submitter;button.disabled=true;try{$('#certificateMessage').textContent='Preparing certificate…';const blob=await SchoolDocuments.pdf(d);download(blob,('bonafide-'+name(s)+'-'+s.year).replace(/[^\w -]/g,'')+'.pdf','application/pdf');activity('Bonafide certificate exported',name(s),'Branch: '+currentBranch().name,s.year);}finally{button.disabled=false;}}render();notice(e.submitter?.value==='pdf'?'Bonafide certificate download started. Check your browser’s Downloads.':'Certificate preview ready.');}catch(error){$('#certificateMessage').textContent=error.message;notice(error.message);}});
 }
+

@@ -128,3 +128,9 @@ The standard Juveli rent subhead is Juveli shop 7&8. Normalization corrects the 
 ### r130 — Nursery and Playgroup subjects
 
 Hindi is excluded from default and existing effective subject setups for Nursery and Playgroup across branches and academic years. New assessments use the filtered setup. Junior and Senior KG retain Hindi. Saved assessments keep their original subject/maxima snapshots and marks. Saving a new Nursery/Playgroup setup with Hindi shows a clear validation message.
+
+### r131 — larger marksheet text
+
+Marksheet PDF text grows by two physical points, including the address footer, without changing the A4 page dimensions. Remarks wrap against the enlarged font and the layout still fits one PDF page. The on-screen preview and Excel font settings also increase by two points; Excel logo and blank-row spacing are tightened to preserve its A4 print setup. Certificate typography is unchanged.
+
+Validation: PDF canvas checks compare the normal page against the prior renderer for a two-point increase, verify a single A4 page and retained content for normal and long reports, and inspect Excel font/print XML. Browser visual testing remains unavailable because Chromium cannot launch in the execution sandbox.
