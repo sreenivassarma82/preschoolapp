@@ -134,3 +134,11 @@ Hindi is excluded from default and existing effective subject setups for Nursery
 Marksheet PDF text grows by two physical points, including the address footer, without changing the A4 page dimensions. Remarks wrap against the enlarged font and the layout still fits one PDF page. The on-screen preview and Excel font settings also increase by two points; Excel logo and blank-row spacing are tightened to preserve its A4 print setup. Certificate typography is unchanged.
 
 Validation: PDF canvas checks compare the normal page against the prior renderer for a two-point increase, verify a single A4 page and retained content for normal and long reports, and inspect Excel font/print XML. Browser visual testing remains unavailable because Chromium cannot launch in the execution sandbox.
+
+### r132 — student attendance
+
+Students → Attendance is available to administrators and enabled teacher logins. Select a branch, academic year, class and date, then save the daily register. Weekdays default to bold blue P; A is bold red and H is bold dark green. Weekends start unmarked. Defaults are labelled unsaved until Save attendance succeeds. Saved statuses override defaults, and cancelled/not-yet-admitted students are excluded as of the selected date. Student lists remain alphabetical.
+
+Admin → Student holidays maintains dated holidays for all or selected branches/classes in the academic year. New/unsaved attendance automatically defaults to H on those dates; existing saved entries are retained for manual correction. Teachers can edit performance and student attendance, but cannot change holidays, financial/staff data, delete attendance or manage users. Attendance changes use the signed-in name in Activity history. Administrators can download the selected daily class register in Excel; unsaved defaults are never reported as saved attendance. Attendance and holiday arrays travel in the normal partitioned OneDrive ledger and full backups, with student/branch delete-and-restore support. All devices should refresh to r132 before using the new module.
+
+Validation includes weekday/weekend/holiday defaults, enrollment and branch/class/year boundaries, teacher edits and denied permissions, named audit history, duplicate/date guards, failed cloud-save retry with drafts retained, student/branch cascade recovery and Excel isolation.

@@ -89,3 +89,5 @@
 
 /* Marksheet typography: two points larger, with tighter cell spacing. */
 .marksheet{font-size:calc(15px + 2pt);line-height:1.25}.marksheet h2{font-size:calc(19px + 2pt)}.marksheet h3{font-size:calc(15px + 2pt)}.marksheet table{font-size:calc(13px + 2pt)}.marksheet th,.marksheet .report-photo{font-size:calc(12px + 2pt)}.marksheet td,.marksheet th{padding:4px 6px}.marksheet .school-addresses{font-size:calc(11px + 2pt);line-height:1.25}@media(max-width:750px){.marksheet .report-meta{font-size:calc(13px + 2pt)}}
+
+.student-status-P{color:#064dc2!important;font-weight:700!important}.student-status-A{color:#bd1515!important;font-weight:700!important}.student-status-H{color:#145c25!important;font-weight:700!important}#studentAttendanceForm footer{display:flex;flex-wrap:wrap;gap:12px;align-items:center}#studentAttendanceForm select{min-width:145px}
