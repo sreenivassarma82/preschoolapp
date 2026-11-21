@@ -158,3 +158,9 @@ School holidays now apply to every student class and all staff in the selected b
 This environment has no access to the user device’s OneDrive session. Publishing adds the administrator action; the administrator must run it in the connected app to update the shared ledger. Tests cover byte-identical preservation, working/weekend/holiday rules across classes and staff types, inactive/shared staff, enrollment/cancellation/future bounds, idempotence, non-writing review, stable-ID timeout retry, exact-change validation and role enforcement.
 
 Attendance cloud parts are grouped by date using the existing eight-bucket format, so class/day updates touch one attendance part instead of rewriting the full historical register. A 2,000-student-entry/200-staff-entry synthetic check verifies single-part changes and reconstruction.
+
+### r135 — attendance exclusions and half days
+
+Deepti Sarma (case/whitespace-normalized name) is excluded from staff attendance entry, monthly lists, attendance exports, bulk weekly-off selection and missing-attendance initialization. Her staff master, access, payroll and already-saved attendance are retained.
+
+Staff working days default to P — Present, with A, HD, H and WO labels and the matching bold student colours. Existing staff status strings remain unchanged in storage for compatibility. HD — Half day is available to students as well, shown in bold red. Admission attendance summaries include HD and calculate (P + 0.5×HD)/(P + A + HD), excluding holidays and weekly offs. Default P is not counted as saved attendance until the day is saved or initialized. The through-today initialization preserves every saved entry, including half days, and excludes Deepti. Run Admin → School holidays → Prepare attendance through today → Save reviewed update in the connected app to apply missing records.

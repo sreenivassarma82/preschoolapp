@@ -93,3 +93,5 @@
 .student-status-P{color:#064dc2!important;font-weight:700!important}.student-status-A{color:#bd1515!important;font-weight:700!important}.student-status-H{color:#145c25!important;font-weight:700!important}#studentAttendanceForm footer{display:flex;flex-wrap:wrap;gap:12px;align-items:center}#studentAttendanceForm select{min-width:145px}
 
 .student-status-WO{color:#495663!important;font-weight:700!important}.admission-summary{margin-top:22px;padding-top:18px;border-top:1px solid #cbdcc3}.admission-summary h3{margin:0 0 10px;color:#20351d}.admission-summary th{white-space:normal}.admission-summary .table-wrap{margin-bottom:12px}
+
+.student-status-HD{color:#bd1515!important;font-weight:700!important}
